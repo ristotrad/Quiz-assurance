@@ -30,12 +30,17 @@
   .page { display: none; max-width: 820px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
   .page.active { display: block; }
 
+  /* MODULE TABS */
+  .module-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; align-items: center; }
+  .mod-tab { padding: 7px 16px; border-radius: 20px; border: 1.5px solid var(--gray2); background: #fff; cursor: pointer; font-size: 13px; color: var(--text2); transition: all .15s; font-weight: 500; }
+  .mod-tab.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .mod-tab:hover:not(.active) { background: var(--gray); }
+  .mod-tab.all { background: var(--orange-light); border-color: var(--orange); color: var(--orange); }
+  .mod-tab.all.active { background: var(--orange); color: #fff; border-color: var(--orange); }
+
   /* QUIZ PAGE */
   .quiz-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 8px; }
   .quiz-header h1 { font-size: 20px; font-weight: 600; }
-  .rubrique-select-wrap { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 1.25rem; }
-  .rubrique-select-wrap label { font-size: 13px; color: var(--text2); }
-  select { padding: 7px 12px; border: 1px solid var(--gray2); border-radius: var(--radius-sm); background: #fff; font-size: 13px; color: var(--text); cursor: pointer; }
   .progress-bar { height: 5px; background: var(--gray2); border-radius: 3px; margin-bottom: 1.25rem; overflow: hidden; }
   .progress-fill { height: 100%; background: var(--green-mid); border-radius: 3px; transition: width .3s; }
   .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 1.25rem; }
@@ -43,8 +48,9 @@
   .stat-label { font-size: 11px; color: var(--text3); margin-bottom: 2px; text-transform: uppercase; letter-spacing: .04em; }
   .stat-val { font-size: 22px; font-weight: 600; }
   .question-card { background: #fff; border: 1px solid var(--gray2); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
-  .q-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .q-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
   .tag { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 20px; background: var(--blue-light); color: var(--blue-dark); font-weight: 500; }
+  .tag-mod { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 20px; background: var(--orange-light); color: var(--orange); font-weight: 500; }
   .type-badge { font-size: 11px; color: var(--text3); }
   .question-text { font-size: 15px; font-weight: 600; line-height: 1.6; margin-bottom: 1.1rem; color: var(--text); }
   .options { display: flex; flex-direction: column; gap: 7px; }
@@ -54,7 +60,6 @@
   .option.correct { border-color: var(--green); background: var(--green-light); cursor: default; }
   .option.wrong { border-color: var(--red); background: var(--red-light); cursor: default; }
   .option.disabled { cursor: default; }
-  /* ROND = single, CARRÉ = multi */
   .opt-indicator { width: 20px; height: 20px; border: 1.5px solid #c0bdb5; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; font-size: 12px; font-weight: 700; color: #fff; transition: all .12s; }
   .opt-indicator.round { border-radius: 50%; }
   .opt-indicator.square { border-radius: 3px; }
@@ -72,10 +77,16 @@
   .btn.primary:hover { background: var(--blue-dark); }
   .btn.success { background: var(--green); color: #fff; border-color: var(--green); }
   .btn.danger { background: var(--red); color: #fff; border-color: var(--red); }
+  .btn.orange { background: var(--orange); color: #fff; border-color: var(--orange); }
   .results { text-align: center; padding: 2rem 0; }
   .score-big { font-size: 64px; font-weight: 700; color: var(--blue); line-height: 1; }
   .score-sub { font-size: 15px; color: var(--text2); margin: 6px 0 1rem; }
   .results-msg { font-size: 16px; margin-bottom: 1.5rem; }
+
+  /* FILTER CHIPS */
+  .filter-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.1rem; }
+  .filter-chip { padding: 5px 12px; border-radius: 20px; border: 1.5px solid var(--gray2); background: #fff; cursor: pointer; font-size: 12px; color: var(--text2); transition: all .12s; }
+  .filter-chip.active { background: var(--blue); color: #fff; border-color: var(--blue); }
 
   /* ADMIN PAGE */
   .admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 8px; }
@@ -101,6 +112,15 @@
   .icon-btn:hover { background: var(--gray); }
   .icon-btn.del:hover { background: var(--red-light); border-color: var(--red); }
 
+  /* MODULE LIST */
+  .module-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem; }
+  .module-item { background: #fff; border: 1px solid var(--gray2); border-radius: var(--radius); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .module-item-info { flex: 1; }
+  .module-item-name { font-size: 15px; font-weight: 600; color: var(--text); }
+  .module-item-count { font-size: 12px; color: var(--text3); margin-top: 2px; }
+  .module-item-actions { display: flex; gap: 6px; align-items: center; }
+  .mod-color { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+
   /* MODAL */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200; align-items: center; justify-content: center; padding: 1rem; }
   .modal-overlay.open { display: flex; }
@@ -121,20 +141,21 @@
   .share-url { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .share-url input { flex: 1; min-width: 200px; background: var(--gray); }
   .copy-feedback { font-size: 12px; color: var(--green); margin-top: 4px; height: 16px; }
-  .export-section { margin-top: 1rem; }
-  .export-section h3 { font-size: 14px; font-weight: 600; margin-bottom: .75rem; }
-  .export-btns { display: flex; gap: 8px; flex-wrap: wrap; }
-
   .empty-state { text-align: center; padding: 2rem; color: var(--text3); font-size: 14px; }
 
-  /* filter chips */
-  .filter-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.1rem; }
-  .filter-chip { padding: 5px 12px; border-radius: 20px; border: 1.5px solid var(--gray2); background: #fff; cursor: pointer; font-size: 12px; color: var(--text2); transition: all .12s; }
-  .filter-chip.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+  /* IMPORT ZONE */
+  .import-zone { border: 2px dashed var(--gray2); border-radius: var(--radius); padding: 1.5rem; text-align: center; background: var(--gray); }
+  .import-zone p { font-size: 13px; color: var(--text2); margin-bottom: .75rem; }
+
+  select { padding: 7px 12px; border: 1px solid var(--gray2); border-radius: var(--radius-sm); background: #fff; font-size: 13px; color: var(--text); cursor: pointer; }
 
   /* toast */
   .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: #1a1a18; color: #fff; padding: 10px 18px; border-radius: var(--radius-sm); font-size: 13px; z-index: 999; opacity: 0; transform: translateY(8px); transition: all .2s; pointer-events: none; }
   .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* info box */
+  .info-box { padding: 10px 14px; background: var(--blue-light); border-radius: var(--radius-sm); font-size: 12px; color: var(--blue-dark); margin-top: .75rem; }
+  .warn-box { padding: 10px 14px; background: var(--orange-light); border-radius: var(--radius-sm); font-size: 12px; color: var(--orange); margin-top: .75rem; }
 </style>
 </head>
 <body>
@@ -155,6 +176,10 @@
     <span id="q-counter" style="font-size:13px;color:var(--text3)"></span>
   </div>
 
+  <!-- MODULE SELECTOR -->
+  <div class="module-bar" id="module-bar-quiz"></div>
+
+  <!-- RUBRIQUE FILTER -->
   <div class="filter-chips" id="rubrique-filter"></div>
 
   <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
@@ -173,12 +198,24 @@
     <button class="btn primary" onclick="openAddModal()">+ Nouvelle question</button>
   </div>
 
+  <!-- MODULES SECTION -->
+  <div class="admin-card" style="margin-bottom:1.5rem">
+    <h3>📦 Modules</h3>
+    <div class="module-list" id="module-list-admin"></div>
+    <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
+      <input type="text" id="new-mod-input" placeholder="Nom du nouveau module..." style="flex:1;min-width:180px">
+      <button class="btn primary" onclick="addModule()">+ Créer module</button>
+    </div>
+    <div class="info-box">💡 Chaque module regroupe plusieurs rubriques. Importez un JSON par module pour ajouter des questions sans écraser les existantes.</div>
+  </div>
+
   <div class="admin-sections">
     <div class="admin-card">
       <h3>📂 Rubriques</h3>
       <div class="rubrique-list" id="rub-list"></div>
-      <div style="display:flex;gap:8px;margin-top:4px">
-        <input type="text" id="new-rub-input" placeholder="Nom de la rubrique..." style="flex:1">
+      <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
+        <select id="new-rub-module" style="flex:1"></select>
+        <input type="text" id="new-rub-input" placeholder="Nom de la rubrique..." style="flex:2;min-width:120px">
         <button class="btn primary" onclick="addRubrique()">Ajouter</button>
       </div>
     </div>
@@ -190,7 +227,7 @@
 
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:8px">
     <h2 style="font-size:16px;font-weight:600">Questions (<span id="q-count">0</span>)</h2>
-    <div style="display:flex;gap:8px;align-items:center">
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
       <input type="text" id="search-q" placeholder="Rechercher..." style="width:180px" oninput="renderAdminList()">
       <select id="filter-rub-admin" onchange="renderAdminList()">
         <option value="">Toutes rubriques</option>
@@ -204,38 +241,36 @@
 <div class="page" id="page-share">
   <h1 style="font-size:20px;font-weight:600;margin-bottom:1.25rem">🔗 Partager le quiz</h1>
 
+  <!-- IMPORT PAR MODULE -->
   <div class="share-box">
-    <h3>Lien de partage (avec toutes vos questions)</h3>
-    <p style="font-size:13px;color:var(--text2);margin-bottom:.75rem">Ce lien encode toutes vos questions et peut être envoyé à n'importe qui. La personne verra exactement votre quiz.</p>
+    <h3>⬆️ Importer des questions (par module)</h3>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:.75rem">Choisissez le module de destination, puis importez votre fichier JSON. Les questions seront <strong>ajoutées</strong> sans effacer les existantes.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
+      <select id="import-module-select" style="flex:1;min-width:180px"></select>
+      <button class="btn primary" onclick="document.getElementById('import-file').click()">⬆ Choisir fichier JSON</button>
+      <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(event)">
+    </div>
+    <div class="warn-box">⚠️ Les questions en double (même texte) ne seront pas importées deux fois.</div>
+  </div>
+
+  <div class="share-box" style="margin-top:1rem">
+    <h3>⬇️ Exporter</h3>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn primary" onclick="exportJSON()">⬇ Exporter tout (JSON)</button>
+      <button class="btn" onclick="exportByModule()">⬇ Exporter par module</button>
+    </div>
+    <p style="font-size:12px;color:var(--text3);margin-top:.75rem">Gardez précieusement votre export JSON comme sauvegarde !</p>
+  </div>
+
+  <div class="share-box" style="margin-top:1rem">
+    <h3>🔗 Lien de partage</h3>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:.75rem">Ce lien encode toutes vos questions et peut être envoyé à n'importe qui.</p>
     <div class="share-url">
       <input type="text" id="share-url-input" readonly placeholder="Cliquez sur Générer...">
       <button class="btn primary" onclick="generateShareLink()">Générer</button>
-      <button class="btn" onclick="copyShareLink()" id="copy-btn">Copier</button>
+      <button class="btn" onclick="copyShareLink()">Copier</button>
     </div>
     <div class="copy-feedback" id="copy-fb"></div>
-  </div>
-
-  <div class="share-box" style="margin-top:1rem">
-    <h3>Exporter / Importer</h3>
-    <div class="export-btns">
-      <button class="btn primary" onclick="exportJSON()">⬇ Exporter JSON</button>
-      <button class="btn" onclick="document.getElementById('import-file').click()">⬆ Importer JSON</button>
-      <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(event)">
-    </div>
-    <p style="font-size:12px;color:var(--text3);margin-top:.75rem">Exportez vos questions en JSON pour les sauvegarder ou les partager via email/WhatsApp. Importez un fichier JSON pour restaurer un quiz.</p>
-  </div>
-
-  <div class="share-box" style="margin-top:1rem">
-    <h3>💡 Pour héberger sur Vercel / GitHub Pages</h3>
-    <div style="font-size:13px;color:var(--text2);line-height:1.9;margin-bottom:10px">
-      <div>① Exportez vos questions en <strong>JSON</strong> (bouton ci-dessus)</div>
-      <div>② Retéléchargez le fichier <strong>HTML</strong> depuis Claude</div>
-      <div>③ Ouvrez-le localement → Partager → <strong>Importer JSON</strong> pour recharger vos questions</div>
-      <div>④ Hébergez ce fichier HTML renommé en <strong>index.html</strong> sur Vercel</div>
-    </div>
-    <div style="padding:10px 14px;background:var(--blue-light);border-radius:var(--radius-sm);font-size:12px;color:var(--blue-dark)">
-      ℹ️ Le JSON contient toutes vos questions personnalisées. Gardez-le précieusement comme sauvegarde.
-    </div>
   </div>
 </div>
 
@@ -245,6 +280,10 @@
     <h2 id="modal-title">Nouvelle question</h2>
     <input type="hidden" id="edit-id">
 
+    <div class="form-group">
+      <label>Module</label>
+      <select id="modal-module" style="width:100%" onchange="updateModalRubriques()"></select>
+    </div>
     <div class="form-group">
       <label>Rubrique</label>
       <select id="modal-rubrique" style="width:100%"></select>
@@ -277,69 +316,127 @@
   </div>
 </div>
 
+<!-- MODAL EXPORT PAR MODULE -->
+<div class="modal-overlay" id="modal-export" onclick="closeExportModal(event)">
+  <div class="modal">
+    <h2>⬇ Exporter par module</h2>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:1rem">Choisissez le module à exporter :</p>
+    <div id="export-module-list" style="display:flex;flex-direction:column;gap:8px"></div>
+    <div class="btn-row" style="margin-top:1rem">
+      <button class="btn" onclick="closeExportModal()">Fermer</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 // ========================
-// DATA
+// DATA STRUCTURE
 // ========================
+// DB.modules = [ { id, name, rubriques: [] } ]
+// DB.questions = [ { id, module, theme, type, text, options, explanation } ]
+
 let DB = {
+  modules: [
+    { id: 1, name: "Module 1 — Histoire de l'assurance" },
+    { id: 2, name: "Module 2 — Biens, choses et patrimoine" },
+    { id: 3, name: "Module 3 — Assurance juridique" },
+    { id: 4, name: "Module 4 — Assurance des personnes et social" }
+  ],
   rubriques: [
-    "Fondamentaux choses","Risque Incendie","Risque Eau","Risque Vol","Bris de glace",
-    "Somme d'assurance","Assurance RC","Protection juridique","RC véhicule","Casco véhicule",
-    "Assurance ménage","Objets de valeur","RC privée","Assurance bâtiment","Assurance transport",
-    "Assurance construction","Dommages","Cyberassurance","Prévoyance"
+    { name: "Fondamentaux choses", moduleId: 2 },
+    { name: "Risque Incendie", moduleId: 2 },
+    { name: "Risque Eau", moduleId: 2 },
+    { name: "Risque Vol", moduleId: 2 },
+    { name: "Bris de glace", moduleId: 2 },
+    { name: "Somme d'assurance", moduleId: 2 },
+    { name: "Assurance RC", moduleId: 2 },
+    { name: "Protection juridique", moduleId: 3 },
+    { name: "RC véhicule", moduleId: 2 },
+    { name: "Casco véhicule", moduleId: 2 },
+    { name: "Assurance ménage", moduleId: 2 },
+    { name: "Objets de valeur", moduleId: 2 },
+    { name: "RC privée", moduleId: 2 },
+    { name: "Assurance bâtiment", moduleId: 2 },
+    { name: "Assurance transport", moduleId: 2 },
+    { name: "Assurance construction", moduleId: 2 },
+    { name: "Dommages", moduleId: 2 },
+    { name: "Cyberassurance", moduleId: 2 },
+    { name: "Prévoyance", moduleId: 4 }
   ],
   questions: [
-    {id:1,theme:"Fondamentaux choses",type:"multi",text:"Quels sont les quatre risques fondamentaux assurables dans l'assurance chose ?",options:[{t:"Dommages dus aux éléments naturels",c:false},{t:"Vol",c:true},{t:"Feu / Incendie",c:true},{t:"Chute de pierres",c:false},{t:"Eau (dégâts d'eau)",c:true},{t:"Effraction",c:false},{t:"Inondation",c:false},{t:"Bris de glace",c:true},{t:"Explosion",c:false}],explanation:"Les quatre risques de base : Feu/Incendie, Dégâts d'eau, Vol et Bris de glace."},
-    {id:2,theme:"Fondamentaux choses",type:"multi",text:"Parmi les exclusions générales de l'assurance choses, lesquelles sont correctes ?",options:[{t:"Événements de guerre",c:true},{t:"Vol simple",c:false},{t:"Désordre, révolution, troubles civils",c:true},{t:"Tremblement de terre (couverture limitée par le pool Suisse)",c:true},{t:"Bris de glace",c:false},{t:"Éruption volcanique",c:true},{t:"Modification de la structure du noyau de l'atome",c:true}],explanation:"Exclusions générales : guerre, troubles civils, tremblement de terre (pool Suisse), éruption volcanique et modification nucléaire."},
-    {id:3,theme:"Risque Incendie",type:"single",text:"Quelle affirmation concernant le feu destructeur est CORRECTE ?",options:[{t:"Un feu utilitaire est toujours un feu destructeur",c:false},{t:"Le feu destructeur s'est échappé de son foyer et s'est développé par sa propre force",c:true},{t:"L'assurance couvre uniquement le feu utilitaire",c:false},{t:"Une bougie allumée est un feu destructeur",c:false}],explanation:"Seul le feu destructeur est assuré. Il s'est échappé de son foyer et s'est développé et propagé de lui-même. Le feu utilitaire (bougie, réchaud) se focalise toujours au même endroit."},
-    {id:4,theme:"Risque Eau",type:"multi",text:"Quelles sont les exclusions spécifiques de l'assurance dégâts d'eau ?",options:[{t:"Dommages par infiltrations d'eaux pluviales par fenêtres ouvertes",c:true},{t:"Dégâts d'eau provoqués par un incendie",c:true},{t:"Fuite d'une canalisation interne",c:false},{t:"Infiltrations d'eau par des ouvertures dans le toit",c:true},{t:"Rupture d'une conduite d'eau",c:false}],explanation:"Les 3 exclusions principales : infiltrations via fenêtres ouvertes, dégâts d'eau causés par incendie/dommages naturels, infiltrations par ouvertures dans le toit."},
-    {id:5,theme:"Risque Vol",type:"single",text:"Concernant les types de vol, quelle affirmation est exacte ?",options:[{t:"La perte ou l'égarement d'un objet est considéré comme un vol simple",c:false},{t:"Le vol avec effraction laisse des traces et recourt à la force",c:true},{t:"Le vol simple est toujours assuré dans l'assurance entreprise",c:false},{t:"Le détroussement est une soustraction sans violence",c:false}],explanation:"Le vol avec effraction recourt à la force et laisse des traces. La perte/égarement n'est pas un vol. Le vol simple n'est pas couvert par l'assurance entreprise."},
-    {id:6,theme:"Risque Vol",type:"multi",text:"Quels types de vol sont couverts dans l'assurance ménage mais PAS dans l'assurance entreprise ?",options:[{t:"Vol avec effraction",c:false},{t:"Détroussement",c:false},{t:"Vol simple",c:true},{t:"Égarement d'un objet",c:false}],explanation:"Le vol simple est assuré dans l'assurance ménage mais PAS dans l'assurance entreprise."},
-    {id:7,theme:"Bris de glace",type:"single",text:"Qu'est-ce qui caractérise techniquement l'assurance bris de glace ?",options:[{t:"Elle couvre uniquement les vitrages de bâtiment",c:false},{t:"C'est une couverture all-risk : la cause du dommage n'a pas d'importance",c:true},{t:"Elle exclut les vitrages du mobilier",c:false},{t:"Elle nécessite une effraction pour être activée",c:false}],explanation:"Le bris de glace est une couverture all-risk. La cause du dommage ne joue aucun rôle — la garantie s'active du seul fait que le verre est brisé."},
-    {id:8,theme:"Somme d'assurance",type:"single",text:"Que signifie la sous-assurance ?",options:[{t:"La somme assurée dépasse la valeur de remplacement",c:false},{t:"La somme assurée est inférieure à la valeur de remplacement",c:true},{t:"La somme assurée est égale à la valeur actuelle",c:false},{t:"L'assuré n'a pas déclaré tous ses biens",c:false}],explanation:"Sous-assurance = somme assurée < valeur de remplacement. Sur-assurance = somme assurée > valeur de remplacement."},
-    {id:9,theme:"Somme d'assurance",type:"multi",text:"Dans quels cas l'assurance au premier risque est-elle particulièrement adaptée ?",options:[{t:"Lorsque la valeur d'assurance n'est pas décelable ou varie fortement",c:true},{t:"Lorsqu'un dégât total a peu de chances d'arriver",c:true},{t:"Lorsque la valeur d'assurance est connue et stable",c:false},{t:"Lorsque l'assuré veut toujours une valeur intégrale",c:false}],explanation:"L'assurance au premier risque convient quand la valeur est inconnue/variable et/ou quand un dégât total est peu probable."},
-    {id:10,theme:"Assurance RC",type:"multi",text:"Quelles sont les prestations de l'assurance responsabilité civile ?",options:[{t:"Couverture des besoins pécuniaires de l'assuré",c:true},{t:"Défense contre les prétentions injustifiées de tiers (protection juridique passive)",c:true},{t:"Couverture des propres dommages de l'assuré",c:false},{t:"Prise en charge des frais médicaux de l'assuré blessé",c:false}],explanation:"La RC couvre les besoins pécuniaires ET la défense contre prétentions injustifiées. Les propres dommages sont exclus."},
-    {id:11,theme:"Protection juridique",type:"single",text:"Quelle est la somme garantie habituelle dans l'assurance de protection juridique ?",options:[{t:"CHF 100'000.-",c:false},{t:"CHF 250'000.-",c:true},{t:"CHF 500'000.-",c:false},{t:"Illimitée",c:false}],explanation:"En règle générale, la somme garantie dans l'assurance protection juridique est de CHF 250'000.-"},
-    {id:12,theme:"Protection juridique",type:"multi",text:"Quelles prestations sont couvertes par l'assurance protection juridique ?",options:[{t:"Conseils juridiques",c:true},{t:"Honoraires d'avocat",c:true},{t:"L'objet du litige lui-même",c:false},{t:"Frais judiciaires",c:true},{t:"Caution exigée par un tribunal",c:true},{t:"Amendes et contraventions",c:false}],explanation:"La protection juridique couvre : conseils, honoraires, frais judiciaires, caution. Elle ne couvre JAMAIS l'objet du litige ni les amendes."},
-    {id:13,theme:"RC véhicule",type:"multi",text:"Concernant l'assurance RC véhicule, quelles affirmations sont exactes ?",options:[{t:"Elle est obligatoire pour tout véhicule circulant sur la voie publique",c:true},{t:"Elle couvre les dommages corporels et matériels causés à des tiers",c:true},{t:"Elle est facultative pour les véhicules en leasing",c:false},{t:"Sans cette assurance, la plaque d'immatriculation n'est pas délivrée",c:true},{t:"Elle couvre les dommages au propre véhicule",c:false}],explanation:"La RC véhicule est obligatoire, couvre les tiers, et la plaque n'est pas délivrée sans elle. Elle NE couvre PAS le propre véhicule."},
-    {id:14,theme:"RC véhicule",type:"multi",text:"Dans quel cas l'assureur RC véhicule peut-il exercer un recours contre l'assuré ?",options:[{t:"Faute grave",c:true},{t:"Conduite sans permis de conduire valable",c:true},{t:"Sinistre sans faute de l'assuré",c:false},{t:"Utilisation d'un véhicule de tiers sans autorisation",c:true},{t:"Dommages pendant une leçon avec moniteur agréé",c:false}],explanation:"Recours possible : faute grave, conduite sans permis, utilisation sans autorisation. Pas de recours : sinistre sans faute, leçon avec moniteur agréé."},
-    {id:15,theme:"Casco véhicule",type:"single",text:"À quel moment recommande-t-on de passer de la casco complète à la casco partielle ?",options:[{t:"Dès la 1re année",c:false},{t:"À partir de la 3e ou 4e année de mise en circulation",c:true},{t:"À partir de la 10e année",c:false},{t:"Après le premier sinistre",c:false}],explanation:"Casco complète pour les véhicules neufs → casco partielle à partir de la 3e/4e année → pas de casco pour les véhicules de plus de 8 ans."},
-    {id:16,theme:"Casco véhicule",type:"multi",text:"Quelles exclusions s'appliquent à l'assurance casco véhicule ?",options:[{t:"Dommages dus à l'usure",c:true},{t:"Dommages résultant d'une course automobile ou rallye",c:true},{t:"Dommages causés par la grêle",c:false},{t:"Sinistres sous l'emprise d'alcool ou de drogues",c:true},{t:"Vol du véhicule",c:false}],explanation:"Exclusions casco : usure, courses/rallyes, alcool/drogues. La grêle et le vol SONT couverts par la casco."},
-    {id:17,theme:"Assurance ménage",type:"single",text:"Dans l'assurance ménage, quelle est la limite pour le vol simple à l'extérieur ?",options:[{t:"CHF 500.-",c:false},{t:"CHF 1'000.-",c:false},{t:"CHF 2'000.-",c:true},{t:"CHF 5'000.-",c:false}],explanation:"Le vol simple à l'extérieur est limité à CHF 2'000.- dans la police d'assurance ménage."},
-    {id:18,theme:"Assurance ménage",type:"multi",text:"Quelles franchises s'appliquent dans l'assurance inventaire du ménage ?",options:[{t:"CHF 200.- pour les dommages ordinaires",c:true},{t:"CHF 500.- pour les dommages naturels (fixée par la loi)",c:true},{t:"CHF 1'000.- pour tous les dommages",c:false},{t:"Pas de franchise pour les dommages naturels",c:false}],explanation:"Franchise légale CHF 500.- pour les dommages naturels, et CHF 200.- pour les autres dommages."},
-    {id:19,theme:"Assurance bâtiment",type:"multi",text:"Dans quels cantons suisses n'existe-t-il PAS de monopole pour l'assurance incendie ? (GUSTAVO)",options:[{t:"Genève",c:true},{t:"Uri",c:true},{t:"Schwyz",c:true},{t:"Tessin",c:true},{t:"Appenzell Rhodes-Intérieures",c:true},{t:"Valais",c:true},{t:"Obwald",c:true},{t:"Zurich",c:false},{t:"Berne",c:false},{t:"Vaud",c:false}],explanation:"Les 7 cantons sans monopole : GUSTAVO = Genève, Uri, Schwyz, Tessin, Appenzell Rhodes-Intérieures, Valais, Obwald."},
-    {id:20,theme:"Assurance bâtiment",type:"single",text:"Quelle franchise s'applique au bris de glace dans l'assurance bâtiment pour les habitations ?",options:[{t:"10% de l'indemnité, min CHF 500.- max CHF 5'000.-",c:false},{t:"10% de l'indemnité, min CHF 1'000.- max CHF 10'000.-",c:true},{t:"CHF 200.- fixe",c:false},{t:"10% de l'indemnité, min CHF 2'500.- max CHF 50'000.-",c:false}],explanation:"Habitations : 10% de l'indemnité, min CHF 1'000.- et max CHF 10'000.-. Autres bâtiments : min CHF 2'500.- et max CHF 50'000.-"},
-    {id:21,theme:"Assurance transport",type:"single",text:"Quelle police d'assurance transport est la plus adaptée pour des envois ponctuels ?",options:[{t:"Police d'abonnement",c:false},{t:"Police au voyage",c:true},{t:"Police forfaitaire",c:false},{t:"Police au chiffre d'affaires",c:false}],explanation:"La police au voyage est pour un transport unique ponctuel. La police d'abonnement pour des transports réguliers."},
-    {id:22,theme:"Dommages",type:"single",text:"Quelle est la différence entre dommages indirects et coûts indirects ?",options:[{t:"Il n'y a aucune différence",c:false},{t:"Les dommages indirects sont causés par un autre dommage (généralement couverts) ; les coûts indirects sont des dommages économiques non automatiquement couverts",c:true},{t:"Les coûts indirects sont toujours couverts, pas les dommages indirects",c:false},{t:"Les deux sont automatiquement exclus",c:false}],explanation:"Dommages indirects = causés par un autre dommage (généralement couverts). Coûts indirects = dommages économiques liés au sinistre (NON automatiquement couverts)."},
-    {id:23,theme:"RC privée",type:"multi",text:"Quels dommages sont couverts par l'assurance RC privée ?",options:[{t:"Dommages corporels causés à des tiers",c:true},{t:"Dommages matériels causés à des tiers",c:true},{t:"Les propres dommages de l'assuré",c:false},{t:"Prétentions découlant d'une responsabilité au-delà de la loi",c:false},{t:"Pour les propriétaires : responsabilité du propriétaire d'ouvrage et foncier",c:true}],explanation:"La RC privée couvre les dommages corporels et matériels causés à des tiers, plus la responsabilité foncière pour les propriétaires."},
-    {id:24,theme:"Cyberassurance",type:"multi",text:"Quelles exclusions s'appliquent à la cyberassurance privée ?",options:[{t:"Paiements volontaires ou sommes extorquées",c:true},{t:"Dommages aux appareils électroniques eux-mêmes",c:true},{t:"Fuite de données personnelles",c:false},{t:"Utilisation professionnelle",c:true},{t:"Frais de licence logicielle",c:true},{t:"Contenu pénalement répréhensible",c:true}],explanation:"Exclusions cyberassurance : paiements extorqués, dommages aux appareils, utilisation professionnelle, contenu illicite, frais de licence."},
-    {id:25,theme:"Objets de valeur",type:"single",text:"Quelle est la franchise habituelle de l'assurance Objets de valeur ?",options:[{t:"CHF 200.- fixe",c:false},{t:"10% de l'indemnité ou au moins CHF 200.-",c:true},{t:"CHF 500.- fixe",c:false},{t:"Pas de franchise",c:false}],explanation:"La franchise est de 10% de l'indemnité, ou au minimum CHF 200.-"}
+    {id:1,module:2,theme:"Fondamentaux choses",type:"multi",text:"Quels sont les quatre risques fondamentaux assurables dans l'assurance chose ?",options:[{t:"Dommages dus aux éléments naturels",c:false},{t:"Vol",c:true},{t:"Feu / Incendie",c:true},{t:"Chute de pierres",c:false},{t:"Eau (dégâts d'eau)",c:true},{t:"Effraction",c:false},{t:"Inondation",c:false},{t:"Bris de glace",c:true},{t:"Explosion",c:false}],explanation:"Les quatre risques de base : Feu/Incendie, Dégâts d'eau, Vol et Bris de glace."},
+    {id:2,module:2,theme:"Fondamentaux choses",type:"multi",text:"Parmi les exclusions générales de l'assurance choses, lesquelles sont correctes ?",options:[{t:"Événements de guerre",c:true},{t:"Vol simple",c:false},{t:"Désordre, révolution, troubles civils",c:true},{t:"Tremblement de terre (couverture limitée par le pool Suisse)",c:true},{t:"Bris de glace",c:false},{t:"Éruption volcanique",c:true},{t:"Modification de la structure du noyau de l'atome",c:true}],explanation:"Exclusions générales : guerre, troubles civils, tremblement de terre (pool Suisse), éruption volcanique et modification nucléaire."},
+    {id:3,module:2,theme:"Risque Incendie",type:"single",text:"Quelle affirmation concernant le feu destructeur est CORRECTE ?",options:[{t:"Un feu utilitaire est toujours un feu destructeur",c:false},{t:"Le feu destructeur s'est échappé de son foyer et s'est développé par sa propre force",c:true},{t:"L'assurance couvre uniquement le feu utilitaire",c:false},{t:"Une bougie allumée est un feu destructeur",c:false}],explanation:"Seul le feu destructeur est assuré. Il s'est échappé de son foyer et s'est développé et propagé de lui-même. Le feu utilitaire (bougie, réchaud) se focalise toujours au même endroit."},
+    {id:4,module:2,theme:"Risque Eau",type:"multi",text:"Quelles sont les exclusions spécifiques de l'assurance dégâts d'eau ?",options:[{t:"Dommages par infiltrations d'eaux pluviales par fenêtres ouvertes",c:true},{t:"Dégâts d'eau provoqués par un incendie",c:true},{t:"Fuite d'une canalisation interne",c:false},{t:"Infiltrations d'eau par des ouvertures dans le toit",c:true},{t:"Rupture d'une conduite d'eau",c:false}],explanation:"Les 3 exclusions principales : infiltrations via fenêtres ouvertes, dégâts d'eau causés par incendie/dommages naturels, infiltrations par ouvertures dans le toit."},
+    {id:5,module:2,theme:"Risque Vol",type:"single",text:"Concernant les types de vol, quelle affirmation est exacte ?",options:[{t:"La perte ou l'égarement d'un objet est considéré comme un vol simple",c:false},{t:"Le vol avec effraction laisse des traces et recourt à la force",c:true},{t:"Le vol simple est toujours assuré dans l'assurance entreprise",c:false},{t:"Le détroussement est une soustraction sans violence",c:false}],explanation:"Le vol avec effraction recourt à la force et laisse des traces. La perte/égarement n'est pas un vol. Le vol simple n'est pas couvert par l'assurance entreprise."},
+    {id:6,module:2,theme:"Risque Vol",type:"multi",text:"Quels types de vol sont couverts dans l'assurance ménage mais PAS dans l'assurance entreprise ?",options:[{t:"Vol avec effraction",c:false},{t:"Détroussement",c:false},{t:"Vol simple",c:true},{t:"Égarement d'un objet",c:false}],explanation:"Le vol simple est assuré dans l'assurance ménage mais PAS dans l'assurance entreprise."},
+    {id:7,module:2,theme:"Bris de glace",type:"single",text:"Qu'est-ce qui caractérise techniquement l'assurance bris de glace ?",options:[{t:"Elle couvre uniquement les vitrages de bâtiment",c:false},{t:"C'est une couverture all-risk : la cause du dommage n'a pas d'importance",c:true},{t:"Elle exclut les vitrages du mobilier",c:false},{t:"Elle nécessite une effraction pour être activée",c:false}],explanation:"Le bris de glace est une couverture all-risk. La cause du dommage ne joue aucun rôle — la garantie s'active du seul fait que le verre est brisé."},
+    {id:8,module:2,theme:"Somme d'assurance",type:"single",text:"Que signifie la sous-assurance ?",options:[{t:"La somme assurée dépasse la valeur de remplacement",c:false},{t:"La somme assurée est inférieure à la valeur de remplacement",c:true},{t:"La somme assurée est égale à la valeur actuelle",c:false},{t:"L'assuré n'a pas déclaré tous ses biens",c:false}],explanation:"Sous-assurance = somme assurée < valeur de remplacement. Sur-assurance = somme assurée > valeur de remplacement."},
+    {id:9,module:2,theme:"Somme d'assurance",type:"multi",text:"Dans quels cas l'assurance au premier risque est-elle particulièrement adaptée ?",options:[{t:"Lorsque la valeur d'assurance n'est pas décelable ou varie fortement",c:true},{t:"Lorsqu'un dégât total a peu de chances d'arriver",c:true},{t:"Lorsque la valeur d'assurance est connue et stable",c:false},{t:"Lorsque l'assuré veut toujours une valeur intégrale",c:false}],explanation:"L'assurance au premier risque convient quand la valeur est inconnue/variable et/ou quand un dégât total est peu probable."},
+    {id:10,module:2,theme:"Assurance RC",type:"multi",text:"Quelles sont les prestations de l'assurance responsabilité civile ?",options:[{t:"Couverture des besoins pécuniaires de l'assuré",c:true},{t:"Défense contre les prétentions injustifiées de tiers (protection juridique passive)",c:true},{t:"Couverture des propres dommages de l'assuré",c:false},{t:"Prise en charge des frais médicaux de l'assuré blessé",c:false}],explanation:"La RC couvre les besoins pécuniaires ET la défense contre prétentions injustifiées. Les propres dommages sont exclus."},
+    {id:11,module:3,theme:"Protection juridique",type:"single",text:"Quelle est la somme garantie habituelle dans l'assurance de protection juridique ?",options:[{t:"CHF 100'000.-",c:false},{t:"CHF 250'000.-",c:true},{t:"CHF 500'000.-",c:false},{t:"Illimitée",c:false}],explanation:"En règle générale, la somme garantie dans l'assurance protection juridique est de CHF 250'000.-"},
+    {id:12,module:3,theme:"Protection juridique",type:"multi",text:"Quelles prestations sont couvertes par l'assurance protection juridique ?",options:[{t:"Conseils juridiques",c:true},{t:"Honoraires d'avocat",c:true},{t:"L'objet du litige lui-même",c:false},{t:"Frais judiciaires",c:true},{t:"Caution exigée par un tribunal",c:true},{t:"Amendes et contraventions",c:false}],explanation:"La protection juridique couvre : conseils, honoraires, frais judiciaires, caution. Elle ne couvre JAMAIS l'objet du litige ni les amendes."},
+    {id:13,module:2,theme:"RC véhicule",type:"multi",text:"Concernant l'assurance RC véhicule, quelles affirmations sont exactes ?",options:[{t:"Elle est obligatoire pour tout véhicule circulant sur la voie publique",c:true},{t:"Elle couvre les dommages corporels et matériels causés à des tiers",c:true},{t:"Elle est facultative pour les véhicules en leasing",c:false},{t:"Sans cette assurance, la plaque d'immatriculation n'est pas délivrée",c:true},{t:"Elle couvre les dommages au propre véhicule",c:false}],explanation:"La RC véhicule est obligatoire, couvre les tiers, et la plaque n'est pas délivrée sans elle. Elle NE couvre PAS le propre véhicule."},
+    {id:14,module:2,theme:"RC véhicule",type:"multi",text:"Dans quel cas l'assureur RC véhicule peut-il exercer un recours contre l'assuré ?",options:[{t:"Faute grave",c:true},{t:"Conduite sans permis de conduire valable",c:true},{t:"Sinistre sans faute de l'assuré",c:false},{t:"Utilisation d'un véhicule de tiers sans autorisation",c:true},{t:"Dommages pendant une leçon avec moniteur agréé",c:false}],explanation:"Recours possible : faute grave, conduite sans permis, utilisation sans autorisation. Pas de recours : sinistre sans faute, leçon avec moniteur agréé."},
+    {id:15,module:2,theme:"Casco véhicule",type:"single",text:"À quel moment recommande-t-on de passer de la casco complète à la casco partielle ?",options:[{t:"Dès la 1re année",c:false},{t:"À partir de la 3e ou 4e année de mise en circulation",c:true},{t:"À partir de la 10e année",c:false},{t:"Après le premier sinistre",c:false}],explanation:"Casco complète pour les véhicules neufs → casco partielle à partir de la 3e/4e année → pas de casco pour les véhicules de plus de 8 ans."},
+    {id:16,module:2,theme:"Casco véhicule",type:"multi",text:"Quelles exclusions s'appliquent à l'assurance casco véhicule ?",options:[{t:"Dommages dus à l'usure",c:true},{t:"Dommages résultant d'une course automobile ou rallye",c:true},{t:"Dommages causés par la grêle",c:false},{t:"Sinistres sous l'emprise d'alcool ou de drogues",c:true},{t:"Vol du véhicule",c:false}],explanation:"Exclusions casco : usure, courses/rallyes, alcool/drogues. La grêle et le vol SONT couverts par la casco."},
+    {id:17,module:2,theme:"Assurance ménage",type:"single",text:"Dans l'assurance ménage, quelle est la limite pour le vol simple à l'extérieur ?",options:[{t:"CHF 500.-",c:false},{t:"CHF 1'000.-",c:false},{t:"CHF 2'000.-",c:true},{t:"CHF 5'000.-",c:false}],explanation:"Le vol simple à l'extérieur est limité à CHF 2'000.- dans la police d'assurance ménage."},
+    {id:18,module:2,theme:"Assurance ménage",type:"multi",text:"Quelles franchises s'appliquent dans l'assurance inventaire du ménage ?",options:[{t:"CHF 200.- pour les dommages ordinaires",c:true},{t:"CHF 500.- pour les dommages naturels (fixée par la loi)",c:true},{t:"CHF 1'000.- pour tous les dommages",c:false},{t:"Pas de franchise pour les dommages naturels",c:false}],explanation:"Franchise légale CHF 500.- pour les dommages naturels, et CHF 200.- pour les autres dommages."},
+    {id:19,module:2,theme:"Assurance bâtiment",type:"multi",text:"Dans quels cantons suisses n'existe-t-il PAS de monopole pour l'assurance incendie ? (GUSTAVO)",options:[{t:"Genève",c:true},{t:"Uri",c:true},{t:"Schwyz",c:true},{t:"Tessin",c:true},{t:"Appenzell Rhodes-Intérieures",c:true},{t:"Valais",c:true},{t:"Obwald",c:true},{t:"Zurich",c:false},{t:"Berne",c:false},{t:"Vaud",c:false}],explanation:"Les 7 cantons sans monopole : GUSTAVO = Genève, Uri, Schwyz, Tessin, Appenzell Rhodes-Intérieures, Valais, Obwald."},
+    {id:20,module:2,theme:"Assurance bâtiment",type:"single",text:"Quelle franchise s'applique au bris de glace dans l'assurance bâtiment pour les habitations ?",options:[{t:"10% de l'indemnité, min CHF 500.- max CHF 5'000.-",c:false},{t:"10% de l'indemnité, min CHF 1'000.- max CHF 10'000.-",c:true},{t:"CHF 200.- fixe",c:false},{t:"10% de l'indemnité, min CHF 2'500.- max CHF 50'000.-",c:false}],explanation:"Habitations : 10% de l'indemnité, min CHF 1'000.- et max CHF 10'000.-. Autres bâtiments : min CHF 2'500.- et max CHF 50'000.-"},
+    {id:21,module:2,theme:"Assurance transport",type:"single",text:"Quelle police d'assurance transport est la plus adaptée pour des envois ponctuels ?",options:[{t:"Police d'abonnement",c:false},{t:"Police au voyage",c:true},{t:"Police forfaitaire",c:false},{t:"Police au chiffre d'affaires",c:false}],explanation:"La police au voyage est pour un transport unique ponctuel. La police d'abonnement pour des transports réguliers."},
+    {id:22,module:2,theme:"Dommages",type:"single",text:"Quelle est la différence entre dommages indirects et coûts indirects ?",options:[{t:"Il n'y a aucune différence",c:false},{t:"Les dommages indirects sont causés par un autre dommage (généralement couverts) ; les coûts indirects sont des dommages économiques non automatiquement couverts",c:true},{t:"Les coûts indirects sont toujours couverts, pas les dommages indirects",c:false},{t:"Les deux sont automatiquement exclus",c:false}],explanation:"Dommages indirects = causés par un autre dommage (généralement couverts). Coûts indirects = dommages économiques liés au sinistre (NON automatiquement couverts)."},
+    {id:23,module:2,theme:"RC privée",type:"multi",text:"Quels dommages sont couverts par l'assurance RC privée ?",options:[{t:"Dommages corporels causés à des tiers",c:true},{t:"Dommages matériels causés à des tiers",c:true},{t:"Les propres dommages de l'assuré",c:false},{t:"Prétentions découlant d'une responsabilité au-delà de la loi",c:false},{t:"Pour les propriétaires : responsabilité du propriétaire d'ouvrage et foncier",c:true}],explanation:"La RC privée couvre les dommages corporels et matériels causés à des tiers, plus la responsabilité foncière pour les propriétaires."},
+    {id:24,module:2,theme:"Cyberassurance",type:"multi",text:"Quelles exclusions s'appliquent à la cyberassurance privée ?",options:[{t:"Paiements volontaires ou sommes extorquées",c:true},{t:"Dommages aux appareils électroniques eux-mêmes",c:true},{t:"Fuite de données personnelles",c:false},{t:"Utilisation professionnelle",c:true},{t:"Frais de licence logicielle",c:true},{t:"Contenu pénalement répréhensible",c:true}],explanation:"Exclusions cyberassurance : paiements extorqués, dommages aux appareils, utilisation professionnelle, contenu illicite, frais de licence."},
+    {id:25,module:2,theme:"Objets de valeur",type:"single",text:"Quelle est la franchise habituelle de l'assurance Objets de valeur ?",options:[{t:"CHF 200.- fixe",c:false},{t:"10% de l'indemnité ou au moins CHF 200.-",c:true},{t:"CHF 500.- fixe",c:false},{t:"Pas de franchise",c:false}],explanation:"La franchise est de 10% de l'indemnité, ou au minimum CHF 200.-"}
   ]
 };
 
-// Load from URL if present
+// ========================
+// INIT & STORAGE
+// ========================
 (function(){
   try {
     const h = window.location.hash;
     if(h.startsWith('#data=')) {
       const decoded = JSON.parse(atob(decodeURIComponent(h.slice(6))));
-      if(decoded.questions && decoded.rubriques) { DB = decoded; }
+      if(decoded.questions) { DB = migrateDB(decoded); }
     }
   } catch(e){}
-  // Load from localStorage if no URL data
   try {
-    const saved = localStorage.getItem('quiz_db');
+    const saved = localStorage.getItem('quiz_db_v2');
     if(saved && !window.location.hash.startsWith('#data=')) {
       const parsed = JSON.parse(saved);
-      if(parsed.questions) DB = parsed;
+      if(parsed.questions) DB = migrateDB(parsed);
     }
   } catch(e){}
 })();
 
+// Migration : ancien format sans modules → nouveau format
+function migrateDB(data) {
+  if(!data.modules) {
+    data.modules = [
+      { id: 1, name: "Module 1 — Histoire de l'assurance" },
+      { id: 2, name: "Module 2 — Biens, choses et patrimoine" },
+      { id: 3, name: "Module 3 — Assurance juridique" },
+      { id: 4, name: "Module 4 — Assurance des personnes et social" }
+    ];
+  }
+  if(data.rubriques && Array.isArray(data.rubriques) && typeof data.rubriques[0] === 'string') {
+    data.rubriques = data.rubriques.map(r => ({ name: r, moduleId: 2 }));
+  }
+  if(!data.rubriques) data.rubriques = [];
+  data.questions = (data.questions||[]).map(q => {
+    if(!q.module) q.module = 2;
+    return q;
+  });
+  return data;
+}
+
 function saveDB() {
-  try { localStorage.setItem('quiz_db', JSON.stringify(DB)); } catch(e){}
+  try { localStorage.setItem('quiz_db_v2', JSON.stringify(DB)); } catch(e){}
 }
 
 // ========================
@@ -349,9 +446,38 @@ function showPage(name) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
-  event && event.target.classList.add('active');
-  if(name==='admin') { renderAdminPage(); }
-  if(name==='share') { document.getElementById('share-url-input').value=''; document.getElementById('copy-fb').textContent=''; }
+  if(event && event.target) event.target.classList.add('active');
+  if(name==='admin') renderAdminPage();
+  if(name==='share') {
+    renderImportModuleSelect();
+    document.getElementById('share-url-input').value='';
+    document.getElementById('copy-fb').textContent='';
+  }
+}
+
+// ========================
+// MODULE LOGIC
+// ========================
+let activeModuleId = 'all'; // 'all' or module id number
+
+function renderModuleBarQuiz() {
+  const bar = document.getElementById('module-bar-quiz');
+  bar.innerHTML = `<button class="mod-tab all ${activeModuleId==='all'?'active':''}" onclick="selectModule('all')">🎯 Tous les modules</button>` +
+    DB.modules.map(m => `<button class="mod-tab ${activeModuleId===m.id?'active':''}" onclick="selectModule(${m.id})">${m.name}</button>`).join('');
+}
+
+function selectModule(id) {
+  activeModuleId = id;
+  renderModuleBarQuiz();
+  renderRubriqueFilter();
+  startQuiz();
+}
+
+function getActiveQuestions() {
+  let qs = DB.questions;
+  if(activeModuleId !== 'all') qs = qs.filter(q => q.module === activeModuleId);
+  if(quizState.activeRubriques.length > 0) qs = qs.filter(q => quizState.activeRubriques.includes(q.theme));
+  return qs;
 }
 
 // ========================
@@ -360,16 +486,24 @@ function showPage(name) {
 let quizState = { questions:[], current:0, correct:0, wrong:0, answered:false, selected:[], activeRubriques:[] };
 
 function initQuiz() {
-  quizState.activeRubriques = [...DB.rubriques];
+  // activeRubriques = all rubriques by default
+  quizState.activeRubriques = DB.rubriques.map(r => r.name || r);
+  renderModuleBarQuiz();
   renderRubriqueFilter();
   startQuiz();
 }
 
 function renderRubriqueFilter() {
-  const rubriques = [...new Set(DB.questions.map(q=>q.theme))];
+  let rubriques;
+  if(activeModuleId === 'all') {
+    rubriques = [...new Set(DB.questions.map(q=>q.theme))];
+  } else {
+    rubriques = [...new Set(DB.questions.filter(q=>q.module===activeModuleId).map(q=>q.theme))];
+  }
+  quizState.activeRubriques = [...rubriques];
   const wrap = document.getElementById('rubrique-filter');
   wrap.innerHTML = `<button class="filter-chip active" onclick="toggleAllRubriques(this)">Toutes</button>` +
-    rubriques.map(r=>`<button class="filter-chip active" data-rub="${r}" onclick="toggleRubrique(this,'${r}')">${r}</button>`).join('');
+    rubriques.map(r=>`<button class="filter-chip active" data-rub="${r}" onclick="toggleRubrique(this,'${r.replace(/'/g,"\\'")}')">${r}</button>`).join('');
 }
 
 function toggleAllRubriques(btn) {
@@ -382,7 +516,7 @@ function toggleAllRubriques(btn) {
   } else {
     chips.forEach(c=>c.classList.add('active'));
     btn.classList.add('active');
-    quizState.activeRubriques = [...DB.rubriques];
+    quizState.activeRubriques = [...chips].map(c=>c.dataset.rub);
   }
   startQuiz();
 }
@@ -398,7 +532,9 @@ function toggleRubrique(btn, rub) {
 function shuffle(arr) { return arr.slice().sort(()=>Math.random()-.5); }
 
 function startQuiz() {
-  let pool = DB.questions.filter(q=>quizState.activeRubriques.includes(q.theme));
+  let pool = DB.questions;
+  if(activeModuleId !== 'all') pool = pool.filter(q => q.module === activeModuleId);
+  if(quizState.activeRubriques.length > 0) pool = pool.filter(q => quizState.activeRubriques.includes(q.theme));
   quizState.questions = shuffle(pool);
   quizState.current = 0; quizState.correct = 0; quizState.wrong = 0;
   updateStats();
@@ -418,7 +554,7 @@ function updateStats() {
 function renderQuestion() {
   if(quizState.current >= quizState.questions.length) { renderResults(); return; }
   if(quizState.questions.length === 0) {
-    document.getElementById('quiz-area').innerHTML = `<div class="empty-state">Aucune question pour les rubriques sélectionnées.</div>`;
+    document.getElementById('quiz-area').innerHTML = `<div class="empty-state">Aucune question pour les rubriques sélectionnées.<br><br>💡 Allez dans <strong>Partager → Importer JSON</strong> pour ajouter des questions.</div>`;
     return;
   }
   quizState.answered = false; quizState.selected = [];
@@ -426,9 +562,11 @@ function renderQuestion() {
   const opts = shuffle(q.options);
   const isMulti = q.type === 'multi';
   const shape = isMulti ? 'square' : 'round';
+  const modName = DB.modules.find(m=>m.id===q.module);
   document.getElementById('quiz-area').innerHTML = `
     <div class="question-card">
       <div class="q-meta">
+        ${modName ? `<span class="tag-mod">${modName.name}</span>` : ''}
         <span class="tag">${q.theme}</span>
         <span class="type-badge">${isMulti ? '☐ Plusieurs réponses' : '◯ Réponse unique'}</span>
       </div>
@@ -519,7 +657,7 @@ function showFeedback(opts, isCorrect) {
   });
   document.getElementById('feedback').innerHTML = `
     <div class="feedback-box ${isCorrect?'ok':'ko'}">
-      <strong>${isCorrect?'✓ Correct !':'✗ Incorrect'}</strong><br>${q.explanation}
+      <strong>${isCorrect?'✓ Correct !':'✗ Incorrect'}</strong><br>${q.explanation||''}
     </div>`;
 }
 
@@ -546,51 +684,136 @@ function renderResults() {
 // ADMIN
 // ========================
 function renderAdminPage() {
+  renderModuleListAdmin();
   renderRubList();
   renderAdminStats();
   renderAdminList();
   renderFilterRubAdmin();
+  renderModuleSelectInputs();
+}
+
+function renderModuleListAdmin() {
+  const list = document.getElementById('module-list-admin');
+  list.innerHTML = DB.modules.map(m => {
+    const count = DB.questions.filter(q=>q.module===m.id).length;
+    return `<div class="module-item">
+      <div class="module-item-info">
+        <div class="module-item-name">${m.name}</div>
+        <div class="module-item-count">${count} question${count>1?'s':''}</div>
+      </div>
+      <div class="module-item-actions">
+        <button class="icon-btn del" onclick="deleteModule(${m.id})" title="Supprimer le module">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function addModule() {
+  const inp = document.getElementById('new-mod-input');
+  const val = inp.value.trim();
+  if(!val) return;
+  const newId = Math.max(0, ...DB.modules.map(m=>m.id)) + 1;
+  DB.modules.push({ id: newId, name: val });
+  saveDB(); inp.value='';
+  renderAdminPage();
+  renderModuleBarQuiz();
+  showToast('Module créé ✓');
+}
+
+function deleteModule(id) {
+  const mod = DB.modules.find(m=>m.id===id);
+  const count = DB.questions.filter(q=>q.module===id).length;
+  if(!confirm(`Supprimer le module "${mod.name}" ?\n${count} question(s) seront également supprimées.`)) return;
+  DB.modules = DB.modules.filter(m=>m.id!==id);
+  DB.questions = DB.questions.filter(q=>q.module!==id);
+  DB.rubriques = DB.rubriques.filter(r=>r.moduleId!==id);
+  saveDB();
+  renderAdminPage();
+  renderModuleBarQuiz();
+  showToast('Module supprimé');
+}
+
+function renderModuleSelectInputs() {
+  // For new rubrique
+  const sel = document.getElementById('new-rub-module');
+  sel.innerHTML = DB.modules.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');
+  // For import
+  renderImportModuleSelect();
+}
+
+function renderImportModuleSelect() {
+  const sel = document.getElementById('import-module-select');
+  if(sel) sel.innerHTML = DB.modules.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');
 }
 
 function renderRubList() {
-  document.getElementById('rub-list').innerHTML = DB.rubriques.map(r=>
-    `<div class="rub-chip">${r}<button onclick="deleteRub('${r}')" title="Supprimer">✕</button></div>`).join('');
-  // Update modal select
+  const rubsByMod = {};
+  DB.modules.forEach(m => { rubsByMod[m.id] = []; });
+  DB.rubriques.forEach(r => {
+    if(!rubsByMod[r.moduleId]) rubsByMod[r.moduleId] = [];
+    rubsByMod[r.moduleId].push(r.name);
+  });
+  let html = '';
+  DB.modules.forEach(m => {
+    const ribs = rubsByMod[m.id] || [];
+    if(ribs.length > 0) {
+      html += `<div style="font-size:11px;color:var(--text3);margin-top:6px;margin-bottom:3px;font-weight:600">${m.name}</div>`;
+      html += ribs.map(r=>`<div class="rub-chip">${r}<button onclick="deleteRub('${r.replace(/'/g,"\\'")}')" title="Supprimer">✕</button></div>`).join('');
+    }
+  });
+  document.getElementById('rub-list').innerHTML = html || '<div style="font-size:12px;color:var(--text3)">Aucune rubrique</div>';
+  // Update modal selects
+  renderModalModuleSelect();
+}
+
+function renderModalModuleSelect() {
+  const ms = document.getElementById('modal-module');
+  ms.innerHTML = DB.modules.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');
+  updateModalRubriques();
+}
+
+function updateModalRubriques() {
+  const modId = parseInt(document.getElementById('modal-module').value);
   const ms = document.getElementById('modal-rubrique');
-  ms.innerHTML = DB.rubriques.map(r=>`<option value="${r}">${r}</option>`).join('');
+  const ribs = DB.rubriques.filter(r=>r.moduleId===modId);
+  ms.innerHTML = ribs.map(r=>`<option value="${r.name}">${r.name}</option>`).join('');
+  if(ribs.length === 0) ms.innerHTML = '<option value="">— Aucune rubrique dans ce module —</option>';
 }
 
 function renderFilterRubAdmin() {
   const sel = document.getElementById('filter-rub-admin');
   const cur = sel.value;
-  sel.innerHTML = `<option value="">Toutes rubriques</option>`+DB.rubriques.map(r=>`<option value="${r}" ${r===cur?'selected':''}>${r}</option>`).join('');
+  sel.innerHTML = `<option value="">Toutes rubriques</option>`+DB.rubriques.map(r=>`<option value="${r.name}" ${r.name===cur?'selected':''}>${r.name}</option>`).join('');
 }
 
 function addRubrique() {
   const inp = document.getElementById('new-rub-input');
+  const modId = parseInt(document.getElementById('new-rub-module').value);
   const val = inp.value.trim();
   if(!val) return;
-  if(DB.rubriques.includes(val)) { showToast('Cette rubrique existe déjà'); return; }
-  DB.rubriques.push(val); saveDB(); inp.value='';
+  if(DB.rubriques.find(r=>r.name===val)) { showToast('Cette rubrique existe déjà'); return; }
+  DB.rubriques.push({ name: val, moduleId: modId });
+  saveDB(); inp.value='';
   renderRubList(); renderFilterRubAdmin(); renderRubriqueFilter();
   showToast('Rubrique ajoutée ✓');
 }
 
 function deleteRub(name) {
   if(!confirm(`Supprimer la rubrique "${name}" ? Les questions associées ne seront pas supprimées.`)) return;
-  DB.rubriques = DB.rubriques.filter(r=>r!==name); saveDB();
+  DB.rubriques = DB.rubriques.filter(r=>r.name!==name); saveDB();
   renderRubList(); renderFilterRubAdmin(); renderRubriqueFilter();
 }
 
 function renderAdminStats() {
   const total = DB.questions.length;
-  const byRub = {};
-  DB.questions.forEach(q=>{ byRub[q.theme]=(byRub[q.theme]||0)+1; });
+  const byMod = {};
+  DB.modules.forEach(m=>{ byMod[m.id]={name:m.name,count:0}; });
+  DB.questions.forEach(q=>{ if(byMod[q.module]) byMod[q.module].count++; });
   document.getElementById('stats-admin').innerHTML = `
     <div style="font-size:13px;color:var(--text2);margin-bottom:8px">Total : <strong style="color:var(--blue)">${total} questions</strong></div>
-    ${Object.entries(byRub).map(([r,n])=>`
+    ${Object.values(byMod).map(m=>`
       <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid var(--gray2)">
-        <span style="color:var(--text2)">${r}</span><span style="font-weight:600;color:var(--blue)">${n}</span>
+        <span style="color:var(--text2)">${m.name}</span><span style="font-weight:600;color:var(--blue)">${m.count}</span>
       </div>`).join('')}`;
 }
 
@@ -626,7 +849,7 @@ function deleteQuestion(id) {
 }
 
 // ========================
-// MODAL
+// MODAL QUESTION
 // ========================
 let currentType = 'single';
 
@@ -638,7 +861,7 @@ function openAddModal() {
   setType('single');
   document.getElementById('opts-builder').innerHTML = '';
   addOptRow(); addOptRow(); addOptRow(); addOptRow();
-  renderRubList();
+  renderModalModuleSelect();
   document.getElementById('modal-overlay').classList.add('open');
 }
 
@@ -647,9 +870,11 @@ function editQuestion(id) {
   document.getElementById('modal-title').textContent = 'Modifier la question';
   document.getElementById('edit-id').value = id;
   document.getElementById('modal-question').value = q.text;
-  document.getElementById('modal-explanation').value = q.explanation;
+  document.getElementById('modal-explanation').value = q.explanation||'';
   setType(q.type);
-  renderRubList();
+  renderModalModuleSelect();
+  document.getElementById('modal-module').value = q.module;
+  updateModalRubriques();
   document.getElementById('modal-rubrique').value = q.theme;
   const builder = document.getElementById('opts-builder');
   builder.innerHTML = '';
@@ -681,8 +906,10 @@ function toggleCorrect(btn) {
 function saveQuestion() {
   const text = document.getElementById('modal-question').value.trim();
   const theme = document.getElementById('modal-rubrique').value;
+  const moduleId = parseInt(document.getElementById('modal-module').value);
   const explanation = document.getElementById('modal-explanation').value.trim();
   if(!text) { showToast('Veuillez saisir la question'); return; }
+  if(!theme) { showToast('Veuillez choisir une rubrique'); return; }
   const rows = document.querySelectorAll('#opts-builder .opt-builder-row');
   const options = [];
   rows.forEach(row=>{
@@ -696,11 +923,11 @@ function saveQuestion() {
   const editId = parseInt(document.getElementById('edit-id').value);
   if(editId) {
     const idx = DB.questions.findIndex(q=>q.id===editId);
-    DB.questions[idx] = {id:editId, theme, type:currentType, text, options, explanation};
+    DB.questions[idx] = {id:editId, module:moduleId, theme, type:currentType, text, options, explanation};
     showToast('Question modifiée ✓');
   } else {
     const newId = Math.max(0,...DB.questions.map(q=>q.id))+1;
-    DB.questions.push({id:newId, theme, type:currentType, text, options, explanation});
+    DB.questions.push({id:newId, module:moduleId, theme, type:currentType, text, options, explanation});
     showToast('Question ajoutée ✓');
   }
   saveDB(); closeModal(); renderAdminPage(); renderRubriqueFilter();
@@ -712,8 +939,121 @@ function closeModal(e) {
 }
 
 // ========================
-// SHARE / EXPORT
+// IMPORT / EXPORT
 // ========================
+
+function importJSON(e) {
+  const file = e.target.files[0]; if(!file) return;
+  const targetModuleId = parseInt(document.getElementById('import-module-select').value);
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      const parsed = JSON.parse(ev.target.result);
+      let questions = [];
+
+      // Support both formats
+      if(parsed.questions) {
+        questions = parsed.questions;
+      } else if(Array.isArray(parsed)) {
+        questions = parsed;
+      } else {
+        showToast('Format invalide'); return;
+      }
+
+      // Get existing question texts to avoid duplicates
+      const existingTexts = new Set(DB.questions.map(q=>q.text.trim().toLowerCase()));
+
+      let added = 0;
+      let skipped = 0;
+
+      questions.forEach(q => {
+        const txt = (q.text||'').trim().toLowerCase();
+        if(existingTexts.has(txt)) { skipped++; return; }
+
+        // Determine theme/rubrique
+        const theme = q.theme || q.rubrique || 'Général';
+
+        // Add rubrique if not exists
+        if(!DB.rubriques.find(r=>r.name===theme)) {
+          DB.rubriques.push({ name: theme, moduleId: targetModuleId });
+        }
+
+        const newId = Math.max(0,...DB.questions.map(x=>x.id))+1;
+        DB.questions.push({
+          id: newId,
+          module: targetModuleId,
+          theme: theme,
+          type: q.type || 'single',
+          text: q.text,
+          options: q.options || q.answers || [],
+          explanation: q.explanation || ''
+        });
+        existingTexts.add(txt);
+        added++;
+      });
+
+      // Also import rubriques if present
+      if(parsed.rubriques) {
+        (Array.isArray(parsed.rubriques) ? parsed.rubriques : []).forEach(r => {
+          const name = typeof r === 'string' ? r : r.name;
+          if(name && !DB.rubriques.find(x=>x.name===name)) {
+            DB.rubriques.push({ name, moduleId: targetModuleId });
+          }
+        });
+      }
+
+      saveDB();
+      initQuiz();
+      renderAdminPage();
+      const modName = DB.modules.find(m=>m.id===targetModuleId)?.name || '';
+      showToast(`✓ ${added} question(s) ajoutée(s) dans ${modName}${skipped>0?' | '+skipped+' doublon(s) ignoré(s)':''}`);
+      showPage('quiz');
+    } catch(err) {
+      showToast('Erreur lors de l\'import');
+      console.error(err);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value='';
+}
+
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(DB, null, 2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='quiz_assurances_complet.json'; a.click();
+}
+
+function exportByModule() {
+  const list = document.getElementById('export-module-list');
+  list.innerHTML = DB.modules.map(m => {
+    const count = DB.questions.filter(q=>q.module===m.id).length;
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--gray2)">
+      <div>
+        <div style="font-size:14px;font-weight:600">${m.name}</div>
+        <div style="font-size:12px;color:var(--text3)">${count} question(s)</div>
+      </div>
+      <button class="btn primary" onclick="exportModuleJSON(${m.id})">⬇ Exporter</button>
+    </div>`;
+  }).join('');
+  document.getElementById('modal-export').classList.add('open');
+}
+
+function exportModuleJSON(modId) {
+  const mod = DB.modules.find(m=>m.id===modId);
+  const questions = DB.questions.filter(q=>q.module===modId);
+  const rubriques = DB.rubriques.filter(r=>r.moduleId===modId).map(r=>r.name);
+  const data = { rubriques, questions };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`quiz_${mod.name.replace(/[^a-z0-9]/gi,'_')}.json`; a.click();
+  showToast('Export ' + mod.name + ' ✓');
+}
+
+function closeExportModal(e) {
+  if(e && e.target !== document.getElementById('modal-export')) return;
+  document.getElementById('modal-export').classList.remove('open');
+}
+
 function generateShareLink() {
   try {
     const encoded = btoa(encodeURIComponent(JSON.stringify(DB)));
@@ -733,78 +1073,12 @@ function copyShareLink() {
   }).catch(()=>{ inp.select(); document.execCommand('copy'); showToast('Copié !'); });
 }
 
-function exportJSON() {
-  const blob = new Blob([JSON.stringify(DB, null, 2)], {type:'application/json'});
-  const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download='quiz_assurances.json'; a.click();
-}
-
-function importJSON(e) {
-  const file = e.target.files[0]; if(!file) return;
-  const reader = new FileReader();
-  reader.onload = function(ev) {
-    try {
-      const parsed = JSON.parse(ev.target.result);
-      if(parsed.questions && parsed.rubriques) {
-        DB = parsed; saveDB();
-        initQuiz(); renderAdminPage();
-        showToast('Import réussi ! '+parsed.questions.length+' questions chargées.');
-        showPage('quiz');
-      } else { showToast('Format invalide'); }
-    } catch(err) { showToast('Erreur lors de l\'import'); }
-  };
-  reader.readAsText(file);
-  e.target.value='';
-}
-
-function downloadSelf() {
-  // Fetch the current page source via XHR then inject the DB
-  const dbJson = JSON.stringify(DB);
-  fetch(window.location.href)
-    .then(r => r.text())
-    .then(html => {
-      // Inject DB just before </head>
-      const injected = html.replace('</head>',
-        `<script>window.__EMBEDDED_DB__=${dbJson};<\/script></head>`);
-      const blob = new Blob([injected], {type:'text/html'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'quiz_assurances_complet.html';
-      a.click();
-      showToast('Téléchargement en cours...');
-    })
-    .catch(() => {
-      // Fallback: build a minimal standalone HTML with embedded DB
-      const blob = new Blob([buildStandaloneHTML(dbJson)], {type:'text/html'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'quiz_assurances_complet.html';
-      a.click();
-      showToast('Téléchargement en cours...');
-    });
-}
-
-function buildStandaloneHTML(dbJson) {
-  // Get full page HTML from the original source embedded in the page
-  const src = document.querySelector('script[data-src]');
-  if(src) return src.textContent.replace('__DB_PLACEHOLDER__', dbJson);
-  // Last resort: serialize current DOM
-  const clone = document.documentElement.cloneNode(true);
-  // Remove any existing embedded db scripts
-  clone.querySelectorAll('script[id="embedded-db"]').forEach(s=>s.remove());
-  const inj = document.createElement('script');
-  inj.id = 'embedded-db';
-  inj.textContent = `window.__EMBEDDED_DB__=${dbJson};`;
-  clone.querySelector('head').insertBefore(inj, clone.querySelector('head').firstChild);
-  return '<!DOCTYPE html>\n' + clone.outerHTML;
-}
-
 // ========================
 // TOAST
 // ========================
 function showToast(msg) {
   const t = document.getElementById('toast'); t.textContent=msg;
-  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200);
+  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800);
 }
 
 // ========================
