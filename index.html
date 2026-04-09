@@ -188,9 +188,11 @@
 <!-- QUIZ PAGE -->
 <div class="page active" id="page-quiz">
   <div class="quiz-header">
-    <h1 id="quiz-title">Quiz — Assurances</h1>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button onclick="switchUser()" id="user-avatar-btn" title="Changer d'utilisateur" style="background:var(--blue-light);border:1.5px solid var(--blue);border-radius:50%;width:38px;height:38px;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">👦</button>
+      <h1 id="quiz-title" style="font-size:18px;font-weight:600"></h1>
+    </div>
     <span id="q-counter" style="font-size:13px;color:var(--text3)"></span>
-    <button onclick="switchUser()" style="background:none;border:none;font-size:11px;color:var(--text3);cursor:pointer;padding:2px 6px;border-radius:4px" title="Changer d'utilisateur">🔄</button>
   </div>
 
   <div style="display:none"><!-- spacer -->
@@ -1668,11 +1670,12 @@ function chooseProfile(p) {
 }
 
 function updateNavProfile() {
-  // Afficher le profil actif dans le titre du quiz
+  const p = currentStatsProfile;
+  if (!p || !PROFILES[p]) return;
   const title = document.getElementById('quiz-title');
-  if (title && currentStatsProfile && PROFILES[currentStatsProfile]) {
-    title.textContent = PROFILES[currentStatsProfile].emoji + ' ' + PROFILES[currentStatsProfile].name;
-  }
+  if (title) title.textContent = PROFILES[p].name;
+  const avatar = document.getElementById('user-avatar-btn');
+  if (avatar) avatar.textContent = PROFILES[p].emoji;
 }
 
 // ========================
