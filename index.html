@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Assurances — AFA FR ACP</title>
+<style>
+  :root {
+    --blue: #185FA5; --blue-light: #E6F1FB; --blue-dark: #0C447C;
+    --green: #0F6E56; --green-light: #E1F5EE; --green-mid: #1D9E75;
+    --red: #993C1D; --red-light: #FAECE7;
+    --orange: #BA7517; --orange-light: #FAEEDA;
+    --gray: #f5f4f1; --gray2: #e8e6e0; --gray3: #888780;
+    --text: #1a1a18; --text2: #5a5956; --text3: #888780;
+    --radius: 10px; --radius-sm: 6px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0ede8; color: var(--text); min-height: 100vh; }
+
+  /* NAV */
+  nav { background: #fff; border-bottom: 1px solid var(--gray2); padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; height: 54px; position: sticky; top: 0; z-index: 100; }
+  .nav-logo { font-size: 15px; font-weight: 600; color: var(--blue); }
+  .nav-tabs { display: flex; gap: 4px; }
+  .nav-tab { padding: 6px 14px; border-radius: 20px; border: none; background: transparent; cursor: pointer; font-size: 13px; color: var(--text2); transition: all .15s; }
+  .nav-tab.active { background: var(--blue); color: #fff; }
+  .nav-tab:hover:not(.active) { background: var(--gray); }
+
+  /* PAGES */
+  .page { display: none; max-width: 820px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+  .page.active { display: block; }
+
+  /* MODULE TABS */
+  .module-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; align-items: center; }
+  .mod-tab { padding: 7px 16px; border-radius: 20px; border: 1.5px solid var(--gray2); background: #fff; cursor: pointer; font-size: 13px; color: var(--text2); transition: all .15s; font-weight: 500; }
+  .mod-tab.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .mod-tab:hover:not(.active) { background: var(--gray); }
+  .mod-tab.all { background: var(--orange-light); border-color: var(--orange); color: var(--orange); }
+  .mod-tab.all.active { background: var(--orange); color: #fff; border-color: var(--orange); }
+
+  /* QUIZ PAGE */
+  .quiz-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 8px; }
+  .quiz-header h1 { font-size: 20px; font-weight: 600; }
+  .progress-bar { height: 5px; background: var(--gray2); border-radius: 3px; margin-bottom: 1.25rem; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--green-mid); border-radius: 3px; transition: width .3s; }
+  .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 1.25rem; }
+  .stat { background: #fff; border-radius: var(--radius-sm); padding: 10px; text-align: center; border: 1px solid var(--gray2); }
+  .stat-label { font-size: 11px; color: var(--text3); margin-bottom: 2px; text-transform: uppercase; letter-spacing: .04em; }
+  .stat-val { font-size: 22px; font-weight: 600; }
+  .question-card { background: #fff; border: 1px solid var(--gray2); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
+  .q-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .tag { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 20px; background: var(--blue-light); color: var(--blue-dark); font-weight: 500; }
+  .tag-mod { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 20px; background: var(--orange-light); color: var(--orange); font-weight: 500; }
+  .type-badge { font-size: 11px; color: var(--text3); }
+  .question-text { font-size: 15px; font-weight: 600; line-height: 1.6; margin-bottom: 1.1rem; color: var(--text); }
+  .options { display: flex; flex-direction: column; gap: 7px; }
+  .option { display: flex; align-items: flex-start; gap: 10px; padding: 10px 13px; border: 1.5px solid var(--gray2); border-radius: var(--radius-sm); cursor: pointer; transition: border-color .12s, background .12s; user-select: none; }
+  .option:hover { border-color: #b5d4f4; background: #f5f9fe; }
+  .option.selected { border-color: var(--blue); background: var(--blue-light); }
+  .option.correct { border-color: var(--green); background: var(--green-light); cursor: default; }
+  .option.wrong { border-color: var(--red); background: var(--red-light); cursor: default; }
+  .option.disabled { cursor: default; }
+  .opt-indicator { width: 20px; height: 20px; border: 1.5px solid #c0bdb5; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; font-size: 12px; font-weight: 700; color: #fff; transition: all .12s; }
+  .opt-indicator.round { border-radius: 50%; }
+  .opt-indicator.square { border-radius: 3px; }
+  .opt-indicator.sel-ind { background: var(--blue); border-color: var(--blue); }
+  .opt-indicator.tick-ind { background: var(--green); border-color: var(--green); }
+  .opt-indicator.cross-ind { background: var(--red); border-color: var(--red); }
+  .opt-text { font-size: 14px; line-height: 1.5; color: var(--text); }
+  .feedback-box { margin-top: 1rem; padding: 11px 14px; border-radius: var(--radius-sm); font-size: 13px; line-height: 1.6; }
+  .feedback-box.ok { background: var(--green-light); color: #04342C; border: 1px solid #5DCAA5; }
+  .feedback-box.ko { background: var(--red-light); color: #4A1B0C; border: 1px solid #F0997B; }
+  .btn-row { display: flex; gap: 8px; margin-top: 1rem; flex-wrap: wrap; }
+  .btn { padding: 9px 18px; border-radius: var(--radius-sm); border: 1.5px solid var(--gray2); background: #fff; cursor: pointer; font-size: 14px; color: var(--text); transition: all .12s; font-weight: 500; }
+  .btn:hover { background: var(--gray); }
+  .btn.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .btn.primary:hover { background: var(--blue-dark); }
+  .btn.success { background: var(--green); color: #fff; border-color: var(--green); }
+  .btn.danger { background: var(--red); color: #fff; border-color: var(--red); }
+  .btn.orange { background: var(--orange); color: #fff; border-color: var(--orange); }
+  .results { text-align: center; padding: 2rem 0; }
+  .score-big { font-size: 64px; font-weight: 700; color: var(--blue); line-height: 1; }
+  .score-sub { font-size: 15px; color: var(--text2); margin: 6px 0 1rem; }
+  .results-msg { font-size: 16px; margin-bottom: 1.5rem; }
+
+  /* FILTER CHIPS */
+  .filter-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.1rem; }
+  .filter-chip { padding: 5px 12px; border-radius: 20px; border: 1.5px solid var(--gray2); background: #fff; cursor: pointer; font-size: 12px; color: var(--text2); transition: all .12s; }
+  .filter-chip.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+  /* ADMIN PAGE */
+  .admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 8px; }
+  .admin-header h1 { font-size: 20px; font-weight: 600; }
+  .admin-sections { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+  @media(max-width:600px){ .admin-sections { grid-template-columns:1fr; } }
+  .admin-card { background: #fff; border: 1px solid var(--gray2); border-radius: var(--radius); padding: 1.1rem; }
+  .admin-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 1rem; color: var(--blue); }
+  .form-group { margin-bottom: 10px; }
+  .form-group label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 4px; font-weight: 500; }
+  input[type=text], textarea { width: 100%; padding: 8px 10px; border: 1px solid var(--gray2); border-radius: var(--radius-sm); font-size: 13px; color: var(--text); font-family: inherit; }
+  input[type=text]:focus, textarea:focus, select:focus { outline: none; border-color: var(--blue); }
+  textarea { resize: vertical; min-height: 70px; }
+  .rubrique-list { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+  .rub-chip { display: flex; align-items: center; gap: 5px; padding: 4px 10px; background: var(--blue-light); color: var(--blue-dark); border-radius: 20px; font-size: 12px; font-weight: 500; }
+  .rub-chip button { background: none; border: none; cursor: pointer; color: var(--blue); font-size: 14px; padding: 0; line-height: 1; }
+  .question-list { display: flex; flex-direction: column; gap: 8px; }
+  .q-item { background: #fff; border: 1px solid var(--gray2); border-radius: var(--radius-sm); padding: 10px 12px; display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .q-item-text { font-size: 13px; line-height: 1.5; flex: 1; }
+  .q-item-meta { font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .q-item-actions { display: flex; gap: 5px; flex-shrink: 0; }
+  .icon-btn { width: 28px; height: 28px; border-radius: 5px; border: 1px solid var(--gray2); background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  .icon-btn:hover { background: var(--gray); }
+  .icon-btn.del:hover { background: var(--red-light); border-color: var(--red); }
+
+  /* MODULE LIST */
+  .module-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem; }
+  .module-item { background: #fff; border: 1px solid var(--gray2); border-radius: var(--radius); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .module-item-info { flex: 1; }
+  .module-item-name { font-size: 15px; font-weight: 600; color: var(--text); }
+  .module-item-count { font-size: 12px; color: var(--text3); margin-top: 2px; }
+  .module-item-actions { display: flex; gap: 6px; align-items: center; }
+  .mod-color { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200; align-items: center; justify-content: center; padding: 1rem; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: #fff; border-radius: var(--radius); width: 100%; max-width: 620px; max-height: 90vh; overflow-y: auto; padding: 1.5rem; box-shadow: 0 8px 40px rgba(0,0,0,.18); }
+  .modal h2 { font-size: 17px; font-weight: 600; margin-bottom: 1.25rem; color: var(--blue); }
+  .options-builder { display: flex; flex-direction: column; gap: 7px; margin-bottom: 10px; }
+  .opt-builder-row { display: flex; align-items: center; gap: 8px; }
+  .opt-builder-row input[type=text] { flex: 1; }
+  .opt-correct-toggle { width: 28px; height: 28px; border-radius: 4px; border: 1.5px solid var(--gray2); background: #fff; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .opt-correct-toggle.active { background: var(--green); border-color: var(--green); color: #fff; }
+  .type-toggle { display: flex; gap: 8px; margin-bottom: 10px; }
+  .type-btn { padding: 7px 16px; border-radius: 20px; border: 1.5px solid var(--gray2); background: #fff; cursor: pointer; font-size: 13px; }
+  .type-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+  /* SHARE */
+  .share-box { background: #fff; border: 1px solid var(--gray2); border-radius: var(--radius); padding: 1.25rem; margin-top: 1rem; }
+  .share-box h3 { font-size: 14px; font-weight: 600; margin-bottom: .75rem; }
+  .share-url { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .share-url input { flex: 1; min-width: 200px; background: var(--gray); }
+  .copy-feedback { font-size: 12px; color: var(--green); margin-top: 4px; height: 16px; }
+  .empty-state { text-align: center; padding: 2rem; color: var(--text3); font-size: 14px; }
+
+  /* IMPORT ZONE */
+  .import-zone { border: 2px dashed var(--gray2); border-radius: var(--radius); padding: 1.5rem; text-align: center; background: var(--gray); }
+  .import-zone p { font-size: 13px; color: var(--text2); margin-bottom: .75rem; }
+
+  select { padding: 7px 12px; border: 1px solid var(--gray2); border-radius: var(--radius-sm); background: #fff; font-size: 13px; color: var(--text); cursor: pointer; }
+
+  /* toast */
+  /* BOUTON EDIT QUIZ */
+  .question-card { position: relative; }
+  .btn-edit-q { position:absolute; top:10px; right:10px; background:transparent; border:1.5px solid var(--gray2); border-radius:6px; padding:3px 10px; font-size:12px; cursor:pointer; color:var(--text3); transition:all .12s; }
+  .btn-edit-q:hover { background:var(--blue-light); border-color:var(--blue); color:var(--blue); }
+
+  /* MODALE EDIT */
+  .eq-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9000; align-items:center; justify-content:center; }
+  .eq-overlay.open { display:flex; }
+  .eq-box { background:#fff; border-radius:14px; padding:1.5rem; width:520px; max-width:95vw; max-height:90vh; overflow-y:auto; box-shadow:0 8px 40px rgba(0,0,0,0.22); }
+  .eq-box h2 { font-size:16px; font-weight:700; margin-bottom:1.1rem; color:var(--blue); }
+  .eq-opt-row { display:flex; align-items:center; gap:8px; margin-bottom:7px; }
+  .eq-opt-row input[type=text] { flex:1; padding:7px 10px; border:1px solid var(--gray2); border-radius:6px; font-size:13px; }
+  .eq-opt-correct { width:18px; height:18px; accent-color:var(--green); cursor:pointer; flex-shrink:0; }
+  .eq-opt-del { background:transparent; border:none; color:var(--red); cursor:pointer; font-size:15px; padding:2px 6px; border-radius:4px; }
+  .eq-opt-del:hover { background:var(--red-light); }
+
+  .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: #1a1a18; color: #fff; padding: 10px 18px; border-radius: var(--radius-sm); font-size: 13px; z-index: 999; opacity: 0; transform: translateY(8px); transition: all .2s; pointer-events: none; }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* info box */
+  .info-box { padding: 10px 14px; background: var(--blue-light); border-radius: var(--radius-sm); font-size: 12px; color: var(--blue-dark); margin-top: .75rem; }
+  .warn-box { padding: 10px 14px; background: var(--orange-light); border-radius: var(--radius-sm); font-size: 12px; color: var(--orange); margin-top: .75rem; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">📚 Quiz Assurances</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('quiz')">Quiz</button>
+    <button class="nav-tab" onclick="showPage('admin')">✏️ Gérer</button>
+    <button class="nav-tab" onclick="showPage('share')">🔗 Partager</button>
+  </div>
+</nav>
+
+<!-- QUIZ PAGE -->
+<div class="page active" id="page-quiz">
+  <div class="quiz-header">
+    <h1 id="quiz-title">Quiz — Assurances</h1>
+    <span id="q-counter" style="font-size:13px;color:var(--text3)"></span>
+  <span id="sync-status" style="font-size:12px;font-weight:500;transition:color .3s"></span>
+  </div>
+
+  <!-- MODULE SELECTOR -->
+  <div class="module-bar" id="module-bar-quiz"></div>
+
+  <!-- RUBRIQUE FILTER -->
+  <div class="filter-chips" id="rubrique-filter"></div>
+
+  <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-label">Répondues</div><div class="stat-val" id="s-total" style="color:var(--blue)">0</div></div>
+    <div class="stat"><div class="stat-label">Correctes</div><div class="stat-val" id="s-ok" style="color:var(--green)">0</div></div>
+    <div class="stat"><div class="stat-label">Incorrectes</div><div class="stat-val" id="s-no" style="color:var(--red)">0</div></div>
+  </div>
+  <div id="quiz-area"></div>
+</div>
+
+<!-- ADMIN PAGE -->
+<div class="page" id="page-admin">
+  <div class="admin-header">
+    <h1>Gérer le quiz</h1>
+    <button class="btn primary" onclick="openAddModal()">+ Nouvelle question</button>
+  </div>
+
+  <!-- MODULES SECTION -->
+  <div class="admin-card" style="margin-bottom:1.5rem">
+    <h3>📦 Modules</h3>
+    <div class="module-list" id="module-list-admin"></div>
+    <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
+      <input type="text" id="new-mod-input" placeholder="Nom du nouveau module..." style="flex:1;min-width:180px">
+      <button class="btn primary" onclick="addModule()">+ Créer module</button>
+    </div>
+    <div class="info-box">💡 Chaque module regroupe plusieurs rubriques. Importez un JSON par module pour ajouter des questions sans écraser les existantes.</div>
+  </div>
+
+  <div class="admin-sections">
+    <div class="admin-card">
+      <h3>📂 Rubriques</h3>
+      <div class="rubrique-list" id="rub-list"></div>
+      <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
+        <select id="new-rub-module" style="flex:1"></select>
+        <input type="text" id="new-rub-input" placeholder="Nom de la rubrique..." style="flex:2;min-width:120px">
+        <button class="btn primary" onclick="addRubrique()">Ajouter</button>
+      </div>
+    </div>
+    <div class="admin-card">
+      <h3>📊 Statistiques</h3>
+      <div id="stats-admin"></div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:8px">
+    <h2 style="font-size:16px;font-weight:600">Questions (<span id="q-count">0</span>)</h2>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <input type="text" id="search-q" placeholder="Rechercher..." style="width:180px" oninput="renderAdminList()">
+      <select id="filter-rub-admin" onchange="renderAdminList()">
+        <option value="">Toutes rubriques</option>
+      </select>
+    </div>
+  </div>
+  <div class="question-list" id="admin-q-list"></div>
+</div>
+
+<!-- SHARE PAGE -->
+<div class="page" id="page-share">
+  <h1 style="font-size:20px;font-weight:600;margin-bottom:1.25rem">🔗 Partager le quiz</h1>
+
+  <!-- IMPORT PAR MODULE -->
+  <div class="share-box">
+    <h3>⬆️ Importer des questions (par module)</h3>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:.75rem">Choisissez le module de destination, puis importez votre fichier JSON. Les questions seront <strong>ajoutées</strong> sans effacer les existantes.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
+      <select id="import-module-select" style="flex:1;min-width:180px"></select>
+      <button class="btn primary" onclick="document.getElementById('import-file').click()">⬆ Choisir fichier JSON</button>
+      <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(event)">
+    </div>
+    <div class="warn-box">⚠️ Les questions en double (même texte) ne seront pas importées deux fois.</div>
+  </div>
+
+  <div class="share-box" style="margin-top:1rem">
+    <h3>⬇️ Exporter</h3>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn primary" onclick="exportJSON()">⬇ Exporter tout (JSON)</button>
+      <button class="btn" onclick="exportByModule()">⬇ Exporter par module</button>
+    </div>
+    <p style="font-size:12px;color:var(--text3);margin-top:.75rem">Gardez précieusement votre export JSON comme sauvegarde !</p>
+  </div>
+
+  <div class="share-box" style="margin-top:1rem">
+    <h3>🔗 Lien de partage</h3>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:.75rem">Ce lien encode toutes vos questions et peut être envoyé à n'importe qui.</p>
+    <div class="share-url">
+      <input type="text" id="share-url-input" readonly placeholder="Cliquez sur Générer...">
+      <button class="btn primary" onclick="generateShareLink()">Générer</button>
+      <button class="btn" onclick="copyShareLink()">Copier</button>
+    </div>
+    <div class="copy-feedback" id="copy-fb"></div>
+  </div>
+</div>
+
+<!-- MODAL AJOUT/ÉDITION QUESTION -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal">
+    <h2 id="modal-title">Nouvelle question</h2>
+    <input type="hidden" id="edit-id">
+
+    <div class="form-group">
+      <label>Module</label>
+      <select id="modal-module" style="width:100%" onchange="updateModalRubriques()"></select>
+    </div>
+    <div class="form-group">
+      <label>Rubrique</label>
+      <select id="modal-rubrique" style="width:100%"></select>
+    </div>
+    <div class="form-group">
+      <label>Type de question</label>
+      <div class="type-toggle">
+        <button class="type-btn active" id="type-single-btn" onclick="setType('single')">◯ Choix unique</button>
+        <button class="type-btn" id="type-multi-btn" onclick="setType('multi')">☐ Choix multiple</button>
+      </div>
+      <p style="font-size:11px;color:var(--text3)">Choix unique = ronds (○) | Choix multiple = carrés (□)</p>
+    </div>
+    <div class="form-group">
+      <label>Question</label>
+      <textarea id="modal-question" placeholder="Rédigez la question..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Réponses <span style="color:var(--text3);font-size:11px">(cliquez ✓ pour marquer comme correcte)</span></label>
+      <div class="options-builder" id="opts-builder"></div>
+      <button class="btn" onclick="addOptRow()" style="font-size:13px;padding:6px 12px">+ Ajouter une réponse</button>
+    </div>
+    <div class="form-group">
+      <label>Explication (affichée après la réponse)</label>
+      <textarea id="modal-explanation" placeholder="Explication de la bonne réponse..."></textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn primary" onclick="saveQuestion()">Enregistrer</button>
+      <button class="btn" onclick="closeModal()">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EXPORT PAR MODULE -->
+<div class="modal-overlay" id="modal-export" onclick="closeExportModal(event)">
+  <div class="modal">
+    <h2>⬇ Exporter par module</h2>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:1rem">Choisissez le module à exporter :</p>
+    <div id="export-module-list" style="display:flex;flex-direction:column;gap:8px"></div>
+    <div class="btn-row" style="margin-top:1rem">
+      <button class="btn" onclick="closeExportModal()">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODALE EDIT QUESTION (quiz) -->
+<div class="eq-overlay" id="eq-overlay">
+  <div class="eq-box">
+    <h2>✏️ Modifier la question</h2>
+
+    <!-- Code d'accès -->
+    <div id="eq-auth-section">
+      <p style="font-size:13px;color:var(--text2);margin-bottom:.75rem">Entre le code pour modifier cette question :</p>
+      <div style="display:flex;gap:8px">
+        <input type="password" id="eq-code-input" placeholder="Code…" maxlength="10"
+          style="flex:1;padding:9px 12px;border:1.5px solid var(--gray2);border-radius:8px;font-size:15px;letter-spacing:4px"
+          onkeydown="if(event.key==='Enter') checkEqCode()">
+        <button class="btn primary" onclick="checkEqCode()">OK</button>
+      </div>
+      <div id="eq-code-error" style="color:var(--red);font-size:12px;margin-top:6px;min-height:16px"></div>
+    </div>
+
+    <!-- Formulaire (caché tant que code non validé) -->
+    <div id="eq-form-section" style="display:none">
+      <div class="form-group" style="margin-bottom:10px">
+        <label style="font-size:12px;color:var(--text2);font-weight:500;display:block;margin-bottom:4px">Question</label>
+        <textarea id="eq-text" rows="3" style="width:100%;padding:8px 10px;border:1px solid var(--gray2);border-radius:6px;font-size:13px;font-family:inherit;resize:vertical"></textarea>
+      </div>
+      <div class="form-group" style="margin-bottom:10px">
+        <label style="font-size:12px;color:var(--text2);font-weight:500;display:block;margin-bottom:4px">Type</label>
+        <select id="eq-type" style="width:100%;padding:8px;border:1px solid var(--gray2);border-radius:6px;font-size:13px">
+          <option value="single">◯ Réponse unique</option>
+          <option value="multi">☐ Plusieurs réponses</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom:10px">
+        <label style="font-size:12px;color:var(--text2);font-weight:500;display:block;margin-bottom:4px">
+          Réponses &nbsp;<span style="font-weight:400;color:var(--text3)">(coche ✓ la/les bonne(s))</span>
+        </label>
+        <div id="eq-opts-list"></div>
+        <button class="btn" onclick="addEqOpt()" style="margin-top:6px;font-size:12px">+ Ajouter une réponse</button>
+      </div>
+      <div class="form-group" style="margin-bottom:1rem">
+        <label style="font-size:12px;color:var(--text2);font-weight:500;display:block;margin-bottom:4px">Explication</label>
+        <textarea id="eq-explanation" rows="2" style="width:100%;padding:8px 10px;border:1px solid var(--gray2);border-radius:6px;font-size:13px;font-family:inherit;resize:vertical"></textarea>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button class="btn" onclick="closeEqModal()">Annuler</button>
+        <button class="btn success" onclick="saveEqModal()">💾 Enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ========================
+// DATA STRUCTURE
+// ========================
+// DB.modules = [ { id, name, rubriques: [] } ]
+// DB.questions = [ { id, module, theme, type, text, options, explanation } ]
+
+let DB = {
+  modules: [
+    { id: 1, name: "Module 1 — Histoire de l'assurance" },
+    { id: 2, name: "Module 2 — Biens, choses et patrimoine" },
+    { id: 3, name: "Module 3 — Assurance juridique" },
+    { id: 4, name: "Module 4 — Assurance des personnes et social" }
+  ],
+  rubriques: [
+    { name: "Fondamentaux choses", moduleId: 2 },
+    { name: "Risque Incendie", moduleId: 2 },
+    { name: "Risque Eau", moduleId: 2 },
+    { name: "Risque Vol", moduleId: 2 },
+    { name: "Bris de glace", moduleId: 2 },
+    { name: "Somme d'assurance", moduleId: 2 },
+    { name: "Assurance RC", moduleId: 2 },
+    { name: "Protection juridique", moduleId: 3 },
+    { name: "RC véhicule", moduleId: 2 },
+    { name: "Casco véhicule", moduleId: 2 },
+    { name: "Assurance ménage", moduleId: 2 },
+    { name: "Objets de valeur", moduleId: 2 },
+    { name: "RC privée", moduleId: 2 },
+    { name: "Assurance bâtiment", moduleId: 2 },
+    { name: "Assurance transport", moduleId: 2 },
+    { name: "Assurance construction", moduleId: 2 },
+    { name: "Dommages", moduleId: 2 },
+    { name: "Cyberassurance", moduleId: 2 },
+    { name: "Prévoyance", moduleId: 4 }
+  ],
+  questions: [
+    {id:1,module:2,theme:"Fondamentaux choses",type:"multi",text:"Quels sont les quatre risques fondamentaux assurables dans l'assurance chose ?",options:[{t:"Dommages dus aux éléments naturels",c:false},{t:"Vol",c:true},{t:"Feu / Incendie",c:true},{t:"Chute de pierres",c:false},{t:"Eau (dégâts d'eau)",c:true},{t:"Effraction",c:false},{t:"Inondation",c:false},{t:"Bris de glace",c:true},{t:"Explosion",c:false}],explanation:"Les quatre risques de base : Feu/Incendie, Dégâts d'eau, Vol et Bris de glace."},
+    {id:2,module:2,theme:"Fondamentaux choses",type:"multi",text:"Parmi les exclusions générales de l'assurance choses, lesquelles sont correctes ?",options:[{t:"Événements de guerre",c:true},{t:"Vol simple",c:false},{t:"Désordre, révolution, troubles civils",c:true},{t:"Tremblement de terre (couverture limitée par le pool Suisse)",c:true},{t:"Bris de glace",c:false},{t:"Éruption volcanique",c:true},{t:"Modification de la structure du noyau de l'atome",c:true}],explanation:"Exclusions générales : guerre, troubles civils, tremblement de terre (pool Suisse), éruption volcanique et modification nucléaire."},
+    {id:3,module:2,theme:"Risque Incendie",type:"single",text:"Quelle affirmation concernant le feu destructeur est CORRECTE ?",options:[{t:"Un feu utilitaire est toujours un feu destructeur",c:false},{t:"Le feu destructeur s'est échappé de son foyer et s'est développé par sa propre force",c:true},{t:"L'assurance couvre uniquement le feu utilitaire",c:false},{t:"Une bougie allumée est un feu destructeur",c:false}],explanation:"Seul le feu destructeur est assuré. Il s'est échappé de son foyer et s'est développé et propagé de lui-même. Le feu utilitaire (bougie, réchaud) se focalise toujours au même endroit."},
+    {id:4,module:2,theme:"Risque Eau",type:"multi",text:"Quelles sont les exclusions spécifiques de l'assurance dégâts d'eau ?",options:[{t:"Dommages par infiltrations d'eaux pluviales par fenêtres ouvertes",c:true},{t:"Dégâts d'eau provoqués par un incendie",c:true},{t:"Fuite d'une canalisation interne",c:false},{t:"Infiltrations d'eau par des ouvertures dans le toit",c:true},{t:"Rupture d'une conduite d'eau",c:false}],explanation:"Les 3 exclusions principales : infiltrations via fenêtres ouvertes, dégâts d'eau causés par incendie/dommages naturels, infiltrations par ouvertures dans le toit."},
+    {id:5,module:2,theme:"Risque Vol",type:"single",text:"Concernant les types de vol, quelle affirmation est exacte ?",options:[{t:"La perte ou l'égarement d'un objet est considéré comme un vol simple",c:false},{t:"Le vol avec effraction laisse des traces et recourt à la force",c:true},{t:"Le vol simple est toujours assuré dans l'assurance entreprise",c:false},{t:"Le détroussement est une soustraction sans violence",c:false}],explanation:"Le vol avec effraction recourt à la force et laisse des traces. La perte/égarement n'est pas un vol. Le vol simple n'est pas couvert par l'assurance entreprise."},
+    {id:6,module:2,theme:"Risque Vol",type:"multi",text:"Quels types de vol sont couverts dans l'assurance ménage mais PAS dans l'assurance entreprise ?",options:[{t:"Vol avec effraction",c:false},{t:"Détroussement",c:false},{t:"Vol simple",c:true},{t:"Égarement d'un objet",c:false}],explanation:"Le vol simple est assuré dans l'assurance ménage mais PAS dans l'assurance entreprise."},
+    {id:7,module:2,theme:"Bris de glace",type:"single",text:"Qu'est-ce qui caractérise techniquement l'assurance bris de glace ?",options:[{t:"Elle couvre uniquement les vitrages de bâtiment",c:false},{t:"C'est une couverture all-risk : la cause du dommage n'a pas d'importance",c:true},{t:"Elle exclut les vitrages du mobilier",c:false},{t:"Elle nécessite une effraction pour être activée",c:false}],explanation:"Le bris de glace est une couverture all-risk. La cause du dommage ne joue aucun rôle — la garantie s'active du seul fait que le verre est brisé."},
+    {id:8,module:2,theme:"Somme d'assurance",type:"single",text:"Que signifie la sous-assurance ?",options:[{t:"La somme assurée dépasse la valeur de remplacement",c:false},{t:"La somme assurée est inférieure à la valeur de remplacement",c:true},{t:"La somme assurée est égale à la valeur actuelle",c:false},{t:"L'assuré n'a pas déclaré tous ses biens",c:false}],explanation:"Sous-assurance = somme assurée < valeur de remplacement. Sur-assurance = somme assurée > valeur de remplacement."},
+    {id:9,module:2,theme:"Somme d'assurance",type:"multi",text:"Dans quels cas l'assurance au premier risque est-elle particulièrement adaptée ?",options:[{t:"Lorsque la valeur d'assurance n'est pas décelable ou varie fortement",c:true},{t:"Lorsqu'un dégât total a peu de chances d'arriver",c:true},{t:"Lorsque la valeur d'assurance est connue et stable",c:false},{t:"Lorsque l'assuré veut toujours une valeur intégrale",c:false}],explanation:"L'assurance au premier risque convient quand la valeur est inconnue/variable et/ou quand un dégât total est peu probable."},
+    {id:10,module:2,theme:"Assurance RC",type:"multi",text:"Quelles sont les prestations de l'assurance responsabilité civile ?",options:[{t:"Couverture des besoins pécuniaires de l'assuré",c:true},{t:"Défense contre les prétentions injustifiées de tiers (protection juridique passive)",c:true},{t:"Couverture des propres dommages de l'assuré",c:false},{t:"Prise en charge des frais médicaux de l'assuré blessé",c:false}],explanation:"La RC couvre les besoins pécuniaires ET la défense contre prétentions injustifiées. Les propres dommages sont exclus."},
+    {id:11,module:3,theme:"Protection juridique",type:"single",text:"Quelle est la somme garantie habituelle dans l'assurance de protection juridique ?",options:[{t:"CHF 100'000.-",c:false},{t:"CHF 250'000.-",c:true},{t:"CHF 500'000.-",c:false},{t:"Illimitée",c:false}],explanation:"En règle générale, la somme garantie dans l'assurance protection juridique est de CHF 250'000.-"},
+    {id:12,module:3,theme:"Protection juridique",type:"multi",text:"Quelles prestations sont couvertes par l'assurance protection juridique ?",options:[{t:"Conseils juridiques",c:true},{t:"Honoraires d'avocat",c:true},{t:"L'objet du litige lui-même",c:false},{t:"Frais judiciaires",c:true},{t:"Caution exigée par un tribunal",c:true},{t:"Amendes et contraventions",c:false}],explanation:"La protection juridique couvre : conseils, honoraires, frais judiciaires, caution. Elle ne couvre JAMAIS l'objet du litige ni les amendes."},
+    {id:13,module:2,theme:"RC véhicule",type:"multi",text:"Concernant l'assurance RC véhicule, quelles affirmations sont exactes ?",options:[{t:"Elle est obligatoire pour tout véhicule circulant sur la voie publique",c:true},{t:"Elle couvre les dommages corporels et matériels causés à des tiers",c:true},{t:"Elle est facultative pour les véhicules en leasing",c:false},{t:"Sans cette assurance, la plaque d'immatriculation n'est pas délivrée",c:true},{t:"Elle couvre les dommages au propre véhicule",c:false}],explanation:"La RC véhicule est obligatoire, couvre les tiers, et la plaque n'est pas délivrée sans elle. Elle NE couvre PAS le propre véhicule."},
+    {id:14,module:2,theme:"RC véhicule",type:"multi",text:"Dans quel cas l'assureur RC véhicule peut-il exercer un recours contre l'assuré ?",options:[{t:"Faute grave",c:true},{t:"Conduite sans permis de conduire valable",c:true},{t:"Sinistre sans faute de l'assuré",c:false},{t:"Utilisation d'un véhicule de tiers sans autorisation",c:true},{t:"Dommages pendant une leçon avec moniteur agréé",c:false}],explanation:"Recours possible : faute grave, conduite sans permis, utilisation sans autorisation. Pas de recours : sinistre sans faute, leçon avec moniteur agréé."},
+    {id:15,module:2,theme:"Casco véhicule",type:"single",text:"À quel moment recommande-t-on de passer de la casco complète à la casco partielle ?",options:[{t:"Dès la 1re année",c:false},{t:"À partir de la 3e ou 4e année de mise en circulation",c:true},{t:"À partir de la 10e année",c:false},{t:"Après le premier sinistre",c:false}],explanation:"Casco complète pour les véhicules neufs → casco partielle à partir de la 3e/4e année → pas de casco pour les véhicules de plus de 8 ans."},
+    {id:16,module:2,theme:"Casco véhicule",type:"multi",text:"Quelles exclusions s'appliquent à l'assurance casco véhicule ?",options:[{t:"Dommages dus à l'usure",c:true},{t:"Dommages résultant d'une course automobile ou rallye",c:true},{t:"Dommages causés par la grêle",c:false},{t:"Sinistres sous l'emprise d'alcool ou de drogues",c:true},{t:"Vol du véhicule",c:false}],explanation:"Exclusions casco : usure, courses/rallyes, alcool/drogues. La grêle et le vol SONT couverts par la casco."},
+    {id:17,module:2,theme:"Assurance ménage",type:"single",text:"Dans l'assurance ménage, quelle est la limite pour le vol simple à l'extérieur ?",options:[{t:"CHF 500.-",c:false},{t:"CHF 1'000.-",c:false},{t:"CHF 2'000.-",c:true},{t:"CHF 5'000.-",c:false}],explanation:"Le vol simple à l'extérieur est limité à CHF 2'000.- dans la police d'assurance ménage."},
+    {id:18,module:2,theme:"Assurance ménage",type:"multi",text:"Quelles franchises s'appliquent dans l'assurance inventaire du ménage ?",options:[{t:"CHF 200.- pour les dommages ordinaires",c:true},{t:"CHF 500.- pour les dommages naturels (fixée par la loi)",c:true},{t:"CHF 1'000.- pour tous les dommages",c:false},{t:"Pas de franchise pour les dommages naturels",c:false}],explanation:"Franchise légale CHF 500.- pour les dommages naturels, et CHF 200.- pour les autres dommages."},
+    {id:19,module:2,theme:"Assurance bâtiment",type:"multi",text:"Dans quels cantons suisses n'existe-t-il PAS de monopole pour l'assurance incendie ? (GUSTAVO)",options:[{t:"Genève",c:true},{t:"Uri",c:true},{t:"Schwyz",c:true},{t:"Tessin",c:true},{t:"Appenzell Rhodes-Intérieures",c:true},{t:"Valais",c:true},{t:"Obwald",c:true},{t:"Zurich",c:false},{t:"Berne",c:false},{t:"Vaud",c:false}],explanation:"Les 7 cantons sans monopole : GUSTAVO = Genève, Uri, Schwyz, Tessin, Appenzell Rhodes-Intérieures, Valais, Obwald."},
+    {id:20,module:2,theme:"Assurance bâtiment",type:"single",text:"Quelle franchise s'applique au bris de glace dans l'assurance bâtiment pour les habitations ?",options:[{t:"10% de l'indemnité, min CHF 500.- max CHF 5'000.-",c:false},{t:"10% de l'indemnité, min CHF 1'000.- max CHF 10'000.-",c:true},{t:"CHF 200.- fixe",c:false},{t:"10% de l'indemnité, min CHF 2'500.- max CHF 50'000.-",c:false}],explanation:"Habitations : 10% de l'indemnité, min CHF 1'000.- et max CHF 10'000.-. Autres bâtiments : min CHF 2'500.- et max CHF 50'000.-"},
+    {id:21,module:2,theme:"Assurance transport",type:"single",text:"Quelle police d'assurance transport est la plus adaptée pour des envois ponctuels ?",options:[{t:"Police d'abonnement",c:false},{t:"Police au voyage",c:true},{t:"Police forfaitaire",c:false},{t:"Police au chiffre d'affaires",c:false}],explanation:"La police au voyage est pour un transport unique ponctuel. La police d'abonnement pour des transports réguliers."},
+    {id:22,module:2,theme:"Dommages",type:"single",text:"Quelle est la différence entre dommages indirects et coûts indirects ?",options:[{t:"Il n'y a aucune différence",c:false},{t:"Les dommages indirects sont causés par un autre dommage (généralement couverts) ; les coûts indirects sont des dommages économiques non automatiquement couverts",c:true},{t:"Les coûts indirects sont toujours couverts, pas les dommages indirects",c:false},{t:"Les deux sont automatiquement exclus",c:false}],explanation:"Dommages indirects = causés par un autre dommage (généralement couverts). Coûts indirects = dommages économiques liés au sinistre (NON automatiquement couverts)."},
+    {id:23,module:2,theme:"RC privée",type:"multi",text:"Quels dommages sont couverts par l'assurance RC privée ?",options:[{t:"Dommages corporels causés à des tiers",c:true},{t:"Dommages matériels causés à des tiers",c:true},{t:"Les propres dommages de l'assuré",c:false},{t:"Prétentions découlant d'une responsabilité au-delà de la loi",c:false},{t:"Pour les propriétaires : responsabilité du propriétaire d'ouvrage et foncier",c:true}],explanation:"La RC privée couvre les dommages corporels et matériels causés à des tiers, plus la responsabilité foncière pour les propriétaires."},
+    {id:24,module:2,theme:"Cyberassurance",type:"multi",text:"Quelles exclusions s'appliquent à la cyberassurance privée ?",options:[{t:"Paiements volontaires ou sommes extorquées",c:true},{t:"Dommages aux appareils électroniques eux-mêmes",c:true},{t:"Fuite de données personnelles",c:false},{t:"Utilisation professionnelle",c:true},{t:"Frais de licence logicielle",c:true},{t:"Contenu pénalement répréhensible",c:true}],explanation:"Exclusions cyberassurance : paiements extorqués, dommages aux appareils, utilisation professionnelle, contenu illicite, frais de licence."},
+    {id:25,module:2,theme:"Objets de valeur",type:"single",text:"Quelle est la franchise habituelle de l'assurance Objets de valeur ?",options:[{t:"CHF 200.- fixe",c:false},{t:"10% de l'indemnité ou au moins CHF 200.-",c:true},{t:"CHF 500.- fixe",c:false},{t:"Pas de franchise",c:false}],explanation:"La franchise est de 10% de l'indemnité, ou au minimum CHF 200.-"}
+  ]
+};
+
+// ========================
+// INIT & STORAGE
+// ========================
+const QUESTIONS_URL = 'https://raw.githubusercontent.com/ristotrad/Quiz-assurance/main/questions.json';
+
+// Auth admin
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = btoa('Moulaff.1.2.3');
+let isAdminLogged = false;
+
+function checkAdminAuth() {
+  return isAdminLogged || sessionStorage.getItem('quiz_admin') === ADMIN_PASS;
+}
+
+function requireAdmin(callback) {
+  if (checkAdminAuth()) { callback(); return; }
+  const overlay = document.createElement('div');
+  overlay.id = 'admin-auth-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:99999;';
+  overlay.innerHTML = `
+    <div style="background:#fff;border-radius:14px;padding:2rem;width:320px;max-width:90vw;box-shadow:0 8px 40px rgba(0,0,0,0.2)">
+      <div style="text-align:center;font-size:32px;margin-bottom:.5rem">🔒</div>
+      <h2 style="text-align:center;font-size:17px;font-weight:700;margin-bottom:1.25rem;color:#1a1a18">Accès administrateur</h2>
+      <div style="margin-bottom:.75rem">
+        <label style="font-size:12px;color:#5a5956;font-weight:500;display:block;margin-bottom:4px">Nom d'utilisateur</label>
+        <input id="auth-user" type="text" placeholder="admin" style="width:100%;padding:9px 12px;border:1.5px solid #e8e6e0;border-radius:8px;font-size:14px;outline:none"/>
+      </div>
+      <div style="margin-bottom:1rem">
+        <label style="font-size:12px;color:#5a5956;font-weight:500;display:block;margin-bottom:4px">Mot de passe</label>
+        <input id="auth-pass" type="password" placeholder="••••••••" style="width:100%;padding:9px 12px;border:1.5px solid #e8e6e0;border-radius:8px;font-size:14px;outline:none"/>
+      </div>
+      <div id="auth-error" style="color:#993C1D;font-size:12px;margin-bottom:.75rem;min-height:16px;text-align:center"></div>
+      <button onclick="submitAdminAuth()" style="width:100%;padding:10px;background:#185FA5;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer">Se connecter</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.getElementById('auth-pass').addEventListener('keydown', e => { if(e.key==='Enter') submitAdminAuth(); });
+  setTimeout(()=>document.getElementById('auth-user').focus(), 100);
+  // Stocker le callback
+  window._adminCallback = callback;
+}
+
+function submitAdminAuth() {
+  const u = document.getElementById('auth-user').value.trim();
+  const p = document.getElementById('auth-pass').value;
+  if (u === ADMIN_USER && btoa(p) === ADMIN_PASS) {
+    isAdminLogged = true;
+    sessionStorage.setItem('quiz_admin', ADMIN_PASS);
+    document.getElementById('admin-auth-overlay').remove();
+    if (window._adminCallback) { window._adminCallback(); window._adminCallback = null; }
+  } else {
+    document.getElementById('auth-error').textContent = '❌ Identifiants incorrects';
+    document.getElementById('auth-pass').value = '';
+  }
+}
+
+async function loadFromGitHub() {
+  try {
+    const res = await fetch(QUESTIONS_URL + '?t=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (data.questions && data.questions.length > 0) {
+      DB = migrateDB(data);
+      try { localStorage.setItem('quiz_db_v2', JSON.stringify(DB)); } catch(e){}
+      return true;
+    }
+  } catch(e) {
+    console.warn('GitHub fetch failed, fallback local:', e.message);
+  }
+  return false;
+}
+
+function loadLocalOrHash() {
+  try {
+    const h = window.location.hash;
+    if(h.startsWith('#data=')) {
+      const decoded = JSON.parse(atob(decodeURIComponent(h.slice(6))));
+      if(decoded.questions) { DB = migrateDB(decoded); return; }
+    }
+  } catch(e){}
+  try {
+    const saved = localStorage.getItem('quiz_db_v2');
+    if(saved) { const parsed = JSON.parse(saved); if(parsed.questions) DB = migrateDB(parsed); }
+  } catch(e){}
+}
+
+async function initApp() {
+  document.body.insertAdjacentHTML('afterbegin',
+    '<div id="init-loader" style="position:fixed;inset:0;background:#f0ede8;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:12px">' +
+    '<div style="font-size:32px">📚</div>' +
+    '<div style="font-size:15px;color:#5a5956;font-weight:500">Chargement des questions…</div>' +
+    '</div>');
+  loadLocalOrHash();
+  await loadFromGitHub();
+  const loader = document.getElementById('init-loader');
+  if(loader) loader.remove();
+  initQuiz();
+}
+
+// Migration : ancien format sans modules → nouveau format
+function migrateDB(data) {
+  if(!data.modules) {
+    data.modules = [
+      { id: 1, name: "Module 1 — Histoire de l'assurance" },
+      { id: 2, name: "Module 2 — Biens, choses et patrimoine" },
+      { id: 3, name: "Module 3 — Assurance juridique" },
+      { id: 4, name: "Module 4 — Assurance des personnes et social" }
+    ];
+  }
+  if(data.rubriques && Array.isArray(data.rubriques) && typeof data.rubriques[0] === 'string') {
+    data.rubriques = data.rubriques.map(r => ({ name: r, moduleId: 2 }));
+  }
+  if(!data.rubriques) data.rubriques = [];
+  data.questions = (data.questions||[]).map(q => {
+    if(!q.module) q.module = 2;
+    return q;
+  });
+  return data;
+}
+
+// ========================
+// GITHUB AUTO-SYNC
+// ========================
+const GH_TOKEN = atob('Z2hwX3BRNjBZeHBvYXhKZjhzbk1NNzdIV0JSTDdUdTgzWUg4V2g=');
+const GH_REPO  = 'ristotrad/Quiz-assurance';
+const GH_FILE  = 'questions.json';
+const GH_API   = 'https://api.github.com/repos/' + GH_REPO + '/contents/' + GH_FILE;
+
+let syncTimeout = null;
+let isSyncing = false;
+
+async function pushToGitHub() {
+  if (isSyncing) return;
+  isSyncing = true;
+  showSyncStatus('syncing');
+  try {
+    const getRes = await fetch(GH_API, {
+      headers: {
+        'Authorization': 'token ' + GH_TOKEN,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+    const getJson = await getRes.json();
+    const sha = getJson.sha;
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(DB, null, 2))));
+    const putRes = await fetch(GH_API, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'token ' + GH_TOKEN,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: 'Quiz sync — ' + new Date().toLocaleString('fr-CH'),
+        content: content,
+        sha: sha
+      })
+    });
+    if (putRes.ok) {
+      showSyncStatus('ok');
+      showToast('✅ Synchronisé !');
+    } else {
+      showSyncStatus('error');
+      showToast('⚠️ Erreur sync');
+    }
+  } catch(e) {
+    showSyncStatus('error');
+    showToast('⚠️ Erreur sync');
+  }
+  isSyncing = false;
+}
+
+function showSyncStatus(state) {
+  const el = document.getElementById('sync-status');
+  if (!el) return;
+  if (state === 'syncing') { el.textContent = '🔄 Sync…'; el.style.color = 'var(--orange)'; }
+  else if (state === 'ok') { el.textContent = '✅ Synchronisé'; el.style.color = 'var(--green)'; setTimeout(()=>{el.textContent='';},3000); }
+  else { el.textContent = '⚠️ Erreur'; el.style.color = 'var(--red)'; }
+}
+
+function saveDB() {
+  try { localStorage.setItem('quiz_db_v2', JSON.stringify(DB)); } catch(e){}
+  clearTimeout(syncTimeout);
+  syncTimeout = setTimeout(() => { pushToGitHub(); }, 800);
+}
+
+// ========================
+// NAVIGATION
+// ========================
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if(event && event.target) event.target.classList.add('active');
+  if(name==='admin') { requireAdmin(() => { renderAdminPage(); }); return; }
+  if(name==='share') {
+    renderImportModuleSelect();
+    document.getElementById('share-url-input').value='';
+    document.getElementById('copy-fb').textContent='';
+  }
+}
+
+// ========================
+// MODULE LOGIC
+// ========================
+let activeModuleId = 'all'; // 'all' or module id number
+
+function renderModuleBarQuiz() {
+  const bar = document.getElementById('module-bar-quiz');
+  bar.innerHTML = `<button class="mod-tab all ${activeModuleId==='all'?'active':''}" onclick="selectModule('all')">🎯 Tous les modules</button>` +
+    DB.modules.map(m => `<button class="mod-tab ${activeModuleId===m.id?'active':''}" onclick="selectModule(${m.id})">${m.name}</button>`).join('');
+}
+
+function selectModule(id) {
+  activeModuleId = id;
+  renderModuleBarQuiz();
+  renderRubriqueFilter();
+  startQuiz();
+}
+
+function getActiveQuestions() {
+  let qs = DB.questions;
+  if(activeModuleId !== 'all') qs = qs.filter(q => q.module === activeModuleId);
+  if(quizState.activeRubriques.length > 0) qs = qs.filter(q => quizState.activeRubriques.includes(q.theme));
+  return qs;
+}
+
+// ========================
+// QUIZ LOGIC
+// ========================
+let quizState = { questions:[], current:0, correct:0, wrong:0, answered:false, selected:[], activeRubriques:[] };
+
+function initQuiz() {
+  // activeRubriques = all rubriques by default
+  quizState.activeRubriques = DB.rubriques.map(r => r.name || r);
+  renderModuleBarQuiz();
+  renderRubriqueFilter();
+  startQuiz();
+}
+
+function renderRubriqueFilter() {
+  let rubriques;
+  if(activeModuleId === 'all') {
+    rubriques = [...new Set(DB.questions.map(q=>q.theme))];
+  } else {
+    rubriques = [...new Set(DB.questions.filter(q=>q.module===activeModuleId).map(q=>q.theme))];
+  }
+  quizState.activeRubriques = [...rubriques];
+  const wrap = document.getElementById('rubrique-filter');
+  wrap.innerHTML = `<button class="filter-chip active" onclick="toggleAllRubriques(this)">Toutes</button>` +
+    rubriques.map(r=>`<button class="filter-chip active" data-rub="${r}" onclick="toggleRubrique(this,'${r.replace(/'/g,"\\'")}')">${r}</button>`).join('');
+}
+
+function toggleAllRubriques(btn) {
+  const chips = document.querySelectorAll('#rubrique-filter .filter-chip[data-rub]');
+  const allActive = [...chips].every(c=>c.classList.contains('active'));
+  if(allActive) {
+    chips.forEach(c=>c.classList.remove('active'));
+    btn.classList.add('active');
+    quizState.activeRubriques = [];
+  } else {
+    chips.forEach(c=>c.classList.add('active'));
+    btn.classList.add('active');
+    quizState.activeRubriques = [...chips].map(c=>c.dataset.rub);
+  }
+  startQuiz();
+}
+
+function toggleRubrique(btn, rub) {
+  btn.classList.toggle('active');
+  if(btn.classList.contains('active')) { quizState.activeRubriques.push(rub); }
+  else { quizState.activeRubriques = quizState.activeRubriques.filter(r=>r!==rub); }
+  document.querySelector('#rubrique-filter .filter-chip:not([data-rub])').classList.remove('active');
+  startQuiz();
+}
+
+function shuffle(arr) { return arr.slice().sort(()=>Math.random()-.5); }
+
+function startQuiz() {
+  let pool = DB.questions;
+  if(activeModuleId !== 'all') pool = pool.filter(q => q.module === activeModuleId);
+  if(quizState.activeRubriques.length > 0) pool = pool.filter(q => quizState.activeRubriques.includes(q.theme));
+  quizState.questions = shuffle(pool);
+  quizState.current = 0; quizState.correct = 0; quizState.wrong = 0;
+  updateStats();
+  renderQuestion();
+}
+
+function updateStats() {
+  const q = quizState;
+  document.getElementById('s-total').textContent = q.current;
+  document.getElementById('s-ok').textContent = q.correct;
+  document.getElementById('s-no').textContent = q.wrong;
+  const pct = q.questions.length > 0 ? (q.current / q.questions.length * 100) : 0;
+  document.getElementById('prog').style.width = Math.round(pct)+'%';
+  document.getElementById('q-counter').textContent = q.current < q.questions.length ? `Question ${q.current+1} / ${q.questions.length}` : '';
+}
+
+function renderQuestion() {
+  if(quizState.current >= quizState.questions.length) { renderResults(); return; }
+  if(quizState.questions.length === 0) {
+    document.getElementById('quiz-area').innerHTML = `<div class="empty-state">Aucune question pour les rubriques sélectionnées.<br><br>💡 Allez dans <strong>Partager → Importer JSON</strong> pour ajouter des questions.</div>`;
+    return;
+  }
+  quizState.answered = false; quizState.selected = [];
+  const q = quizState.questions[quizState.current];
+  const opts = shuffle(q.options);
+  const isMulti = q.type === 'multi';
+  const shape = isMulti ? 'square' : 'round';
+  const modName = DB.modules.find(m=>m.id===q.module);
+  document.getElementById('quiz-area').innerHTML = `
+    <div class="question-card">
+      <div class="q-meta">
+        ${modName ? `<span class="tag-mod">${modName.name}</span>` : ''}
+        <span class="tag">${q.theme}</span>
+        <span class="type-badge">${isMulti ? '☐ Plusieurs réponses' : '◯ Réponse unique'}</span>
+      </div>
+      <div class="question-text">${q.text}</div>
+      <div class="options" id="opts">
+        ${opts.map((o,i)=>`
+          <div class="option" id="opt-${i}" onclick="selectOpt(${i},${o.c})">
+            <div class="opt-indicator ${shape}" id="ind-${i}">${String.fromCharCode(97+i)}</div>
+            <span class="opt-text">${o.t}</span>
+          </div>`).join('')}
+      </div>
+      <div id="feedback"></div>
+      <div class="btn-row">
+        <button class="btn primary" onclick="submitMulti()" id="btn-submit" style="${isMulti?'':'display:none'}">Valider</button>
+        <button class="btn" onclick="nextQuestion()" id="btn-next" style="display:none">Question suivante →</button>
+        <button class="btn" onclick="startQuiz()" style="font-size:12px;color:var(--text3)">↺ Recommencer</button>
+      </div>
+      <button class="btn-edit-q" onclick="openEqModal()" title="Modifier cette question">✏️</button>
+    </div>`;
+  window._qOpts = opts; window._qData = q;
+}
+
+function selectOpt(idx, isCorrect) {
+  if(quizState.answered) return;
+  const q = window._qData; const opts = window._qOpts;
+  if(q.type==='single') {
+    document.querySelectorAll('.option').forEach((el,i)=>{
+      el.classList.remove('selected');
+      const ind = document.getElementById('ind-'+i);
+      ind.classList.remove('sel-ind');
+      ind.textContent = String.fromCharCode(97+i);
+    });
+    quizState.selected = [idx];
+    document.getElementById('opt-'+idx).classList.add('selected');
+    const ind = document.getElementById('ind-'+idx); ind.classList.add('sel-ind'); ind.textContent='✓';
+    submitSingle();
+  } else {
+    const si = quizState.selected.indexOf(idx);
+    const el = document.getElementById('opt-'+idx);
+    const ind = document.getElementById('ind-'+idx);
+    if(si>-1) {
+      quizState.selected.splice(si,1); el.classList.remove('selected');
+      ind.classList.remove('sel-ind'); ind.textContent=String.fromCharCode(97+idx);
+    } else {
+      quizState.selected.push(idx); el.classList.add('selected');
+      ind.classList.add('sel-ind'); ind.textContent='✓';
+    }
+  }
+}
+
+function submitSingle() {
+  quizState.answered = true;
+  const opts = window._qOpts;
+  const isCorrect = quizState.selected.length>0 && opts[quizState.selected[0]].c;
+  showFeedback(opts, isCorrect);
+  document.getElementById('btn-next').style.display='inline-block';
+  if(isCorrect) quizState.correct++; else quizState.wrong++;
+  updateStats();
+}
+
+function submitMulti() {
+  if(quizState.answered) return;
+  quizState.answered = true;
+  const opts = window._qOpts;
+  const correctIdxs = opts.reduce((a,o,i)=>{ if(o.c) a.push(i); return a; },[]);
+  const wrongSelected = quizState.selected.filter(i=>!opts[i].c).length;
+  const missed = correctIdxs.filter(i=>!quizState.selected.includes(i)).length;
+  const isCorrect = wrongSelected===0 && missed===0;
+  showFeedback(opts, isCorrect);
+  document.getElementById('btn-submit').style.display='none';
+  document.getElementById('btn-next').style.display='inline-block';
+  if(isCorrect) quizState.correct++; else quizState.wrong++;
+  updateStats();
+}
+
+function showFeedback(opts, isCorrect) {
+  const q = window._qData;
+  opts.forEach((o,i)=>{
+    const el = document.getElementById('opt-'+i);
+    const ind = document.getElementById('ind-'+i);
+    el.classList.add('disabled'); el.style.cursor='default';
+    if(o.c) {
+      el.classList.remove('selected','wrong'); el.classList.add('correct');
+      ind.classList.remove('sel-ind','cross-ind'); ind.classList.add('tick-ind'); ind.textContent='✓';
+    } else if(quizState.selected.includes(i)) {
+      el.classList.remove('selected'); el.classList.add('wrong');
+      ind.classList.remove('sel-ind','tick-ind'); ind.classList.add('cross-ind'); ind.textContent='✗';
+    }
+  });
+  document.getElementById('feedback').innerHTML = `
+    <div class="feedback-box ${isCorrect?'ok':'ko'}">
+      <strong>${isCorrect?'✓ Correct !':'✗ Incorrect'}</strong><br>${q.explanation||''}
+    </div>`;
+}
+
+function nextQuestion() { quizState.current++; updateStats(); renderQuestion(); }
+
+// ========================
+// EDIT QUESTION (QUIZ)
+// ========================
+const EQ_CODE = '009944';
+let eqCodeOk = false;
+
+function openEqModal() {
+  eqCodeOk = false;
+  document.getElementById('eq-auth-section').style.display = 'block';
+  document.getElementById('eq-form-section').style.display = 'none';
+  document.getElementById('eq-code-input').value = '';
+  document.getElementById('eq-code-error').textContent = '';
+  document.getElementById('eq-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('eq-code-input').focus(), 100);
+}
+
+function checkEqCode() {
+  const val = document.getElementById('eq-code-input').value.trim();
+  if (val === EQ_CODE) {
+    eqCodeOk = true;
+    document.getElementById('eq-auth-section').style.display = 'none';
+    document.getElementById('eq-form-section').style.display = 'block';
+    fillEqForm();
+  } else {
+    document.getElementById('eq-code-error').textContent = '❌ Code incorrect';
+    document.getElementById('eq-code-input').value = '';
+    document.getElementById('eq-code-input').focus();
+  }
+}
+
+function fillEqForm() {
+  const q = window._qData;
+  if (!q) return;
+  document.getElementById('eq-text').value = q.text;
+  document.getElementById('eq-type').value = q.type;
+  document.getElementById('eq-explanation').value = q.explanation || '';
+  const list = document.getElementById('eq-opts-list');
+  list.innerHTML = '';
+  window._eqOptCount = 0;
+  q.options.forEach(o => addEqOpt(o.t, o.c));
+}
+
+function addEqOpt(text='', correct=false) {
+  const i = window._eqOptCount++;
+  const type = document.getElementById('eq-type').value;
+  const inputType = type === 'multi' ? 'checkbox' : 'radio';
+  document.getElementById('eq-opts-list').insertAdjacentHTML('beforeend', `
+    <div class="eq-opt-row" id="eq-opt-${i}">
+      <input type="${inputType}" name="eq-correct" class="eq-opt-correct" id="eq-c-${i}" ${correct ? 'checked' : ''}>
+      <input type="text" id="eq-t-${i}" value="${text.replace(/"/g, '&quot;')}" placeholder="Réponse…">
+      <button class="eq-opt-del" onclick="document.getElementById('eq-opt-${i}').remove()">✕</button>
+    </div>`);
+}
+
+function saveEqModal() {
+  const q = window._qData;
+  if (!q) return;
+  const newText = document.getElementById('eq-text').value.trim();
+  const newType = document.getElementById('eq-type').value;
+  const newExpl = document.getElementById('eq-explanation').value.trim();
+  if (!newText) { showToast('⚠️ La question ne peut pas être vide'); return; }
+
+  const newOpts = [];
+  document.querySelectorAll('#eq-opts-list .eq-opt-row').forEach(row => {
+    const i = row.id.replace('eq-opt-','');
+    const tEl = document.getElementById('eq-t-'+i);
+    const cEl = document.getElementById('eq-c-'+i);
+    if (tEl && tEl.value.trim()) newOpts.push({ t: tEl.value.trim(), c: cEl ? cEl.checked : false });
+  });
+
+  if (newOpts.length < 2) { showToast('⚠️ Il faut au moins 2 réponses'); return; }
+  if (!newOpts.some(o => o.c)) { showToast('⚠️ Marque au moins une bonne réponse'); return; }
+
+  // Mettre à jour DB
+  const dbQ = DB.questions.find(dq => dq.id === q.id);
+  if (dbQ) { dbQ.text = newText; dbQ.type = newType; dbQ.options = newOpts; dbQ.explanation = newExpl; }
+
+  // Mettre à jour quizState
+  const sqIdx = quizState.questions.findIndex(sq => sq.id === q.id);
+  if (sqIdx > -1) quizState.questions[sqIdx] = { ...quizState.questions[sqIdx], text: newText, type: newType, options: newOpts, explanation: newExpl };
+
+  saveDB();
+  closeEqModal();
+  renderQuestion();
+  showToast('✅ Question corrigée et synchronisée !');
+}
+
+function closeEqModal() {
+  document.getElementById('eq-overlay').classList.remove('open');
+  eqCodeOk = false;
+}
+
+function renderResults() {
+  const q = quizState;
+  const pct = q.questions.length>0 ? Math.round(q.correct/q.questions.length*100) : 0;
+  const msg = pct>=90?"🏆 Excellent ! Tu maîtrises parfaitement le cours." : pct>=75?"🎉 Super. Tu es sur la bonne voie !" : pct>=60?"📖 Pas mal, mais quelques révisions s'imposent." : "💪 Continue à t'entraîner, tu vas y arriver !";
+  document.getElementById('quiz-area').innerHTML = `
+    <div class="results">
+      <div class="score-big">${pct}%</div>
+      <div class="score-sub">${q.correct} / ${q.questions.length} questions correctes</div>
+      <p class="results-msg">${msg}</p>
+      <div class="btn-row" style="justify-content:center">
+        <button class="btn primary" onclick="startQuiz()">↺ Recommencer (mélangé)</button>
+      </div>
+    </div>`;
+  document.getElementById('prog').style.width='100%';
+  document.getElementById('q-counter').textContent='';
+}
+
+// ========================
+// ADMIN
+// ========================
+function renderAdminPage() {
+  renderModuleListAdmin();
+  renderRubList();
+  renderAdminStats();
+  renderAdminList();
+  renderFilterRubAdmin();
+  renderModuleSelectInputs();
+}
+
+function renderModuleListAdmin() {
+  const list = document.getElementById('module-list-admin');
+  list.innerHTML = DB.modules.map(m => {
+    const count = DB.questions.filter(q=>q.module===m.id).length;
+    return `<div class="module-item">
+      <div class="module-item-info">
+        <div class="module-item-name">${m.name}</div>
+        <div class="module-item-count">${count} question${count>1?'s':''}</div>
+      </div>
+      <div class="module-item-actions">
+        <button class="icon-btn del" onclick="deleteModule(${m.id})" title="Supprimer le module">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function addModule() {
+  const inp = document.getElementById('new-mod-input');
+  const val = inp.value.trim();
+  if(!val) return;
+  const newId = Math.max(0, ...DB.modules.map(m=>m.id)) + 1;
+  DB.modules.push({ id: newId, name: val });
+  saveDB(); inp.value='';
+  renderAdminPage();
+  renderModuleBarQuiz();
+  showToast('Module créé ✓');
+}
+
+function deleteModule(id) {
+  const mod = DB.modules.find(m=>m.id===id);
+  const count = DB.questions.filter(q=>q.module===id).length;
+  if(!confirm(`Supprimer le module "${mod.name}" ?\n${count} question(s) seront également supprimées.`)) return;
+  DB.modules = DB.modules.filter(m=>m.id!==id);
+  DB.questions = DB.questions.filter(q=>q.module!==id);
+  DB.rubriques = DB.rubriques.filter(r=>r.moduleId!==id);
+  saveDB();
+  renderAdminPage();
+  renderModuleBarQuiz();
+  showToast('Module supprimé');
+}
+
+function renderModuleSelectInputs() {
+  // For new rubrique
+  const sel = document.getElementById('new-rub-module');
+  sel.innerHTML = DB.modules.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');
+  // For import
+  renderImportModuleSelect();
+}
+
+function renderImportModuleSelect() {
+  const sel = document.getElementById('import-module-select');
+  if(sel) sel.innerHTML = DB.modules.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');
+}
+
+function renderRubList() {
+  const rubsByMod = {};
+  DB.modules.forEach(m => { rubsByMod[m.id] = []; });
+  DB.rubriques.forEach(r => {
+    if(!rubsByMod[r.moduleId]) rubsByMod[r.moduleId] = [];
+    rubsByMod[r.moduleId].push(r.name);
+  });
+  let html = '';
+  DB.modules.forEach(m => {
+    const ribs = rubsByMod[m.id] || [];
+    if(ribs.length > 0) {
+      html += `<div style="font-size:11px;color:var(--text3);margin-top:6px;margin-bottom:3px;font-weight:600">${m.name}</div>`;
+      html += ribs.map(r=>`<div class="rub-chip">${r}<button onclick="deleteRub('${r.replace(/'/g,"\\'")}')" title="Supprimer">✕</button></div>`).join('');
+    }
+  });
+  document.getElementById('rub-list').innerHTML = html || '<div style="font-size:12px;color:var(--text3)">Aucune rubrique</div>';
+  // Update modal selects
+  renderModalModuleSelect();
+}
+
+function renderModalModuleSelect() {
+  const ms = document.getElementById('modal-module');
+  ms.innerHTML = DB.modules.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');
+  updateModalRubriques();
+}
+
+function updateModalRubriques() {
+  const modId = parseInt(document.getElementById('modal-module').value);
+  const ms = document.getElementById('modal-rubrique');
+  const ribs = DB.rubriques.filter(r=>r.moduleId===modId);
+  ms.innerHTML = ribs.map(r=>`<option value="${r.name}">${r.name}</option>`).join('');
+  if(ribs.length === 0) ms.innerHTML = '<option value="">— Aucune rubrique dans ce module —</option>';
+}
+
+function renderFilterRubAdmin() {
+  const sel = document.getElementById('filter-rub-admin');
+  const cur = sel.value;
+  sel.innerHTML = `<option value="">Toutes rubriques</option>`+DB.rubriques.map(r=>`<option value="${r.name}" ${r.name===cur?'selected':''}>${r.name}</option>`).join('');
+}
+
+function addRubrique() {
+  const inp = document.getElementById('new-rub-input');
+  const modId = parseInt(document.getElementById('new-rub-module').value);
+  const val = inp.value.trim();
+  if(!val) return;
+  if(DB.rubriques.find(r=>r.name===val)) { showToast('Cette rubrique existe déjà'); return; }
+  DB.rubriques.push({ name: val, moduleId: modId });
+  saveDB(); inp.value='';
+  renderRubList(); renderFilterRubAdmin(); renderRubriqueFilter();
+  showToast('Rubrique ajoutée ✓');
+}
+
+function deleteRub(name) {
+  if(!confirm(`Supprimer la rubrique "${name}" ? Les questions associées ne seront pas supprimées.`)) return;
+  DB.rubriques = DB.rubriques.filter(r=>r.name!==name); saveDB();
+  renderRubList(); renderFilterRubAdmin(); renderRubriqueFilter();
+}
+
+function renderAdminStats() {
+  const total = DB.questions.length;
+  const byMod = {};
+  DB.modules.forEach(m=>{ byMod[m.id]={name:m.name,count:0}; });
+  DB.questions.forEach(q=>{ if(byMod[q.module]) byMod[q.module].count++; });
+  document.getElementById('stats-admin').innerHTML = `
+    <div style="font-size:13px;color:var(--text2);margin-bottom:8px">Total : <strong style="color:var(--blue)">${total} questions</strong></div>
+    ${Object.values(byMod).map(m=>`
+      <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid var(--gray2)">
+        <span style="color:var(--text2)">${m.name}</span><span style="font-weight:600;color:var(--blue)">${m.count}</span>
+      </div>`).join('')}`;
+}
+
+function renderAdminList() {
+  const search = document.getElementById('search-q').value.toLowerCase();
+  const rub = document.getElementById('filter-rub-admin').value;
+  let qs = DB.questions.filter(q=>{
+    const matchRub = !rub || q.theme===rub;
+    const matchSearch = !search || q.text.toLowerCase().includes(search) || q.theme.toLowerCase().includes(search);
+    return matchRub && matchSearch;
+  });
+  document.getElementById('q-count').textContent = DB.questions.length;
+  const list = document.getElementById('admin-q-list');
+  if(qs.length===0) { list.innerHTML=`<div class="empty-state">Aucune question trouvée.</div>`; return; }
+  list.innerHTML = qs.map(q=>`
+    <div class="q-item">
+      <div class="q-item-text">
+        ${q.text}
+        <div class="q-item-meta"><span class="tag" style="font-size:10px">${q.theme}</span> &nbsp; ${q.type==='single'?'◯ Réponse unique':'☐ Réponse multiple'} &nbsp; ${q.options.filter(o=>o.c).length} bonne(s) réponse(s)</div>
+      </div>
+      <div class="q-item-actions">
+        <button class="icon-btn" onclick="editQuestion(${q.id})" title="Modifier">✏️</button>
+        <button class="icon-btn del" onclick="deleteQuestion(${q.id})" title="Supprimer">🗑</button>
+      </div>
+    </div>`).join('');
+}
+
+function deleteQuestion(id) {
+  if(!confirm('Supprimer cette question ?')) return;
+  DB.questions = DB.questions.filter(q=>q.id!==id); saveDB();
+  renderAdminPage(); renderRubriqueFilter();
+  showToast('Question supprimée');
+}
+
+// ========================
+// MODAL QUESTION
+// ========================
+let currentType = 'single';
+
+function openAddModal() {
+  document.getElementById('modal-title').textContent = 'Nouvelle question';
+  document.getElementById('edit-id').value = '';
+  document.getElementById('modal-question').value = '';
+  document.getElementById('modal-explanation').value = '';
+  setType('single');
+  document.getElementById('opts-builder').innerHTML = '';
+  addOptRow(); addOptRow(); addOptRow(); addOptRow();
+  renderModalModuleSelect();
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function editQuestion(id) {
+  const q = DB.questions.find(x=>x.id===id); if(!q) return;
+  document.getElementById('modal-title').textContent = 'Modifier la question';
+  document.getElementById('edit-id').value = id;
+  document.getElementById('modal-question').value = q.text;
+  document.getElementById('modal-explanation').value = q.explanation||'';
+  setType(q.type);
+  renderModalModuleSelect();
+  document.getElementById('modal-module').value = q.module;
+  updateModalRubriques();
+  document.getElementById('modal-rubrique').value = q.theme;
+  const builder = document.getElementById('opts-builder');
+  builder.innerHTML = '';
+  q.options.forEach(o=>addOptRow(o.t, o.c));
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function setType(type) {
+  currentType = type;
+  document.getElementById('type-single-btn').classList.toggle('active', type==='single');
+  document.getElementById('type-multi-btn').classList.toggle('active', type==='multi');
+}
+
+function addOptRow(text='', correct=false) {
+  const builder = document.getElementById('opts-builder');
+  const div = document.createElement('div'); div.className='opt-builder-row';
+  div.innerHTML = `
+    <button class="opt-correct-toggle ${correct?'active':''}" onclick="toggleCorrect(this)" title="Marquer comme correcte">${correct?'✓':''}</button>
+    <input type="text" placeholder="Texte de la réponse..." value="${text.replace(/"/g,'&quot;')}">
+    <button class="icon-btn del" onclick="this.parentElement.remove()" title="Supprimer">✕</button>`;
+  builder.appendChild(div);
+}
+
+function toggleCorrect(btn) {
+  btn.classList.toggle('active');
+  btn.textContent = btn.classList.contains('active') ? '✓' : '';
+}
+
+function saveQuestion() {
+  const text = document.getElementById('modal-question').value.trim();
+  const theme = document.getElementById('modal-rubrique').value;
+  const moduleId = parseInt(document.getElementById('modal-module').value);
+  const explanation = document.getElementById('modal-explanation').value.trim();
+  if(!text) { showToast('Veuillez saisir la question'); return; }
+  if(!theme) { showToast('Veuillez choisir une rubrique'); return; }
+  const rows = document.querySelectorAll('#opts-builder .opt-builder-row');
+  const options = [];
+  rows.forEach(row=>{
+    const t = row.querySelector('input').value.trim();
+    const c = row.querySelector('.opt-correct-toggle').classList.contains('active');
+    if(t) options.push({t,c});
+  });
+  if(options.length < 2) { showToast('Ajoutez au moins 2 réponses'); return; }
+  if(!options.some(o=>o.c)) { showToast('Marquez au moins une réponse correcte'); return; }
+
+  const editId = parseInt(document.getElementById('edit-id').value);
+  if(editId) {
+    const idx = DB.questions.findIndex(q=>q.id===editId);
+    DB.questions[idx] = {id:editId, module:moduleId, theme, type:currentType, text, options, explanation};
+    showToast('Question modifiée ✓');
+  } else {
+    const newId = Math.max(0,...DB.questions.map(q=>q.id))+1;
+    DB.questions.push({id:newId, module:moduleId, theme, type:currentType, text, options, explanation});
+    showToast('Question ajoutée ✓');
+  }
+  saveDB(); closeModal(); renderAdminPage(); renderRubriqueFilter();
+}
+
+function closeModal(e) {
+  if(e && e.target !== document.getElementById('modal-overlay')) return;
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+// ========================
+// IMPORT / EXPORT
+// ========================
+
+function importJSON(e) {
+  const file = e.target.files[0]; if(!file) return;
+  const targetModuleId = parseInt(document.getElementById('import-module-select').value);
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      const parsed = JSON.parse(ev.target.result);
+      let questions = [];
+
+      // Support both formats
+      if(parsed.questions) {
+        questions = parsed.questions;
+      } else if(Array.isArray(parsed)) {
+        questions = parsed;
+      } else {
+        showToast('Format invalide'); return;
+      }
+
+      // Get existing question texts to avoid duplicates
+      const existingTexts = new Set(DB.questions.map(q=>q.text.trim().toLowerCase()));
+
+      let added = 0;
+      let skipped = 0;
+
+      questions.forEach(q => {
+        const txt = (q.text||'').trim().toLowerCase();
+        if(existingTexts.has(txt)) { skipped++; return; }
+
+        // Determine theme/rubrique
+        const theme = q.theme || q.rubrique || 'Général';
+
+        // Add rubrique if not exists
+        if(!DB.rubriques.find(r=>r.name===theme)) {
+          DB.rubriques.push({ name: theme, moduleId: targetModuleId });
+        }
+
+        const newId = Math.max(0,...DB.questions.map(x=>x.id))+1;
+        DB.questions.push({
+          id: newId,
+          module: targetModuleId,
+          theme: theme,
+          type: q.type || 'single',
+          text: q.text,
+          options: q.options || q.answers || [],
+          explanation: q.explanation || ''
+        });
+        existingTexts.add(txt);
+        added++;
+      });
+
+      // Also import rubriques if present
+      if(parsed.rubriques) {
+        (Array.isArray(parsed.rubriques) ? parsed.rubriques : []).forEach(r => {
+          const name = typeof r === 'string' ? r : r.name;
+          if(name && !DB.rubriques.find(x=>x.name===name)) {
+            DB.rubriques.push({ name, moduleId: targetModuleId });
+          }
+        });
+      }
+
+      saveDB();
+      initQuiz();
+      renderAdminPage();
+      const modName = DB.modules.find(m=>m.id===targetModuleId)?.name || '';
+      showToast(`✓ ${added} question(s) ajoutée(s) dans ${modName}${skipped>0?' | '+skipped+' doublon(s) ignoré(s)':''}`);
+      showPage('quiz');
+    } catch(err) {
+      showToast('Erreur lors de l\'import');
+      console.error(err);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value='';
+}
+
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(DB, null, 2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='quiz_assurances_complet.json'; a.click();
+}
+
+function exportByModule() {
+  const list = document.getElementById('export-module-list');
+  list.innerHTML = DB.modules.map(m => {
+    const count = DB.questions.filter(q=>q.module===m.id).length;
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--gray2)">
+      <div>
+        <div style="font-size:14px;font-weight:600">${m.name}</div>
+        <div style="font-size:12px;color:var(--text3)">${count} question(s)</div>
+      </div>
+      <button class="btn primary" onclick="exportModuleJSON(${m.id})">⬇ Exporter</button>
+    </div>`;
+  }).join('');
+  document.getElementById('modal-export').classList.add('open');
+}
+
+function exportModuleJSON(modId) {
+  const mod = DB.modules.find(m=>m.id===modId);
+  const questions = DB.questions.filter(q=>q.module===modId);
+  const rubriques = DB.rubriques.filter(r=>r.moduleId===modId).map(r=>r.name);
+  const data = { rubriques, questions };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`quiz_${mod.name.replace(/[^a-z0-9]/gi,'_')}.json`; a.click();
+  showToast('Export ' + mod.name + ' ✓');
+}
+
+function closeExportModal(e) {
+  if(e && e.target !== document.getElementById('modal-export')) return;
+  document.getElementById('modal-export').classList.remove('open');
+}
+
+function generateShareLink() {
+  try {
+    const encoded = btoa(encodeURIComponent(JSON.stringify(DB)));
+    const url = window.location.href.split('#')[0] + '#data=' + encoded;
+    document.getElementById('share-url-input').value = url;
+    showToast('Lien généré !');
+  } catch(e) { showToast('Erreur lors de la génération'); }
+}
+
+function copyShareLink() {
+  const inp = document.getElementById('share-url-input');
+  if(!inp.value) { generateShareLink(); return; }
+  navigator.clipboard.writeText(inp.value).then(()=>{
+    document.getElementById('copy-fb').textContent = '✓ Copié dans le presse-papier !';
+    showToast('Copié !');
+    setTimeout(()=>document.getElementById('copy-fb').textContent='',3000);
+  }).catch(()=>{ inp.select(); document.execCommand('copy'); showToast('Copié !'); });
+}
+
+// ========================
+// TOAST
+// ========================
+function showToast(msg) {
+  const t = document.getElementById('toast'); t.textContent=msg;
+  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ========================
+// INIT
+// ========================
+initApp();
+</script>
+</body>
+</html>
