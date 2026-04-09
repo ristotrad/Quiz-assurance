@@ -190,12 +190,9 @@
   <div class="quiz-header">
     <h1 id="quiz-title">Quiz — Assurances</h1>
     <span id="q-counter" style="font-size:13px;color:var(--text3)"></span>
+    <button onclick="switchUser()" style="background:none;border:none;font-size:11px;color:var(--text3);cursor:pointer;padding:2px 6px;border-radius:4px" title="Changer d'utilisateur">🔄</button>
   </div>
-  <div style="display:flex;gap:6px;margin-bottom:.75rem;align-items:center">
-    <span style="font-size:12px;color:var(--text3)">Profil actif :</span>
-    <button class="filter-chip active" id="qp-btn-risto" onclick="setActiveProfile('risto')">👦 Risto</button>
-    <button class="filter-chip" id="qp-btn-dani" onclick="setActiveProfile('dani')">👦 Dani</button>
-  </div>
+
   <div style="display:none"><!-- spacer -->
   <span id="sync-status" style="font-size:12px;font-weight:500;transition:color .3s"></span>
   </div>
@@ -427,6 +424,16 @@
         <button class="btn success" onclick="saveEqModal()">💾 Enregistrer</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ÉCRAN SÉLECTION PROFIL -->
+<div id="profile-select-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:99999;align-items:center;justify-content:center">
+  <div style="background:#fff;border-radius:16px;padding:2rem 1.5rem;width:320px;max-width:92vw;box-shadow:0 8px 40px rgba(0,0,0,.3);text-align:center">
+    <div style="font-size:36px;margin-bottom:.5rem">📚</div>
+    <h2 style="font-size:18px;font-weight:700;margin-bottom:.25rem;color:#1a1a18">Quiz Assurances AFA</h2>
+    <p style="font-size:12px;color:#888;margin-bottom:1.5rem">Qui va faire le quiz ?</p>
+    <div id="profile-select-btns" style="display:flex;flex-direction:column;gap:10px"></div>
   </div>
 </div>
 
@@ -692,10 +699,10 @@ function showPage(name) {
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   if(event && event.target) event.target.classList.add('active');
   if(name==='admin') { requireAdmin(() => { document.getElementById('page-admin').classList.add('active'); renderAdminPage(); }); return; }
+  if(name==='stats') { requireStatsCode(() => { document.getElementById('page-stats').classList.add('active'); renderStatsPage(); }); return; }
   const pageEl = document.getElementById('page-'+name);
   if(pageEl) pageEl.classList.add('active');
   if(name==='share') renderImportModuleSelect();
-  if(name==='stats') renderStatsPage();
 }
 
 // ========================
@@ -910,6 +917,48 @@ function nextQuestion() { quizState.current++; updateStats(); renderQuestion(); 
 // ========================
 // EDIT QUESTION (QUIZ)
 // ========================
+const STATS_CODE = '009944';
+let statsCodeOk = false;
+
+function requireStatsCode(callback) {
+  if (statsCodeOk || sessionStorage.getItem('stats_code') === STATS_CODE) {
+    callback(); return;
+  }
+  const overlay = document.createElement('div');
+  overlay.id = 'stats-code-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:99999;';
+  overlay.innerHTML = `
+    <div style="position:relative;background:#fff;border-radius:14px;padding:2rem;width:300px;max-width:90vw;box-shadow:0 8px 40px rgba(0,0,0,0.2);text-align:center">
+      <button onclick="document.getElementById('stats-code-overlay').remove()" style="position:absolute;top:12px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;color:#888;line-height:1">×</button>
+      <div style="font-size:32px;margin-bottom:.5rem">📊</div>
+      <h2 style="font-size:16px;font-weight:700;margin-bottom:.5rem">Accès protégé</h2>
+      <p style="font-size:12px;color:#888;margin-bottom:1rem">Entre le code pour voir les stats</p>
+      <input id="stats-code-input" type="password" placeholder="• • • • • •"
+        maxlength="10"
+        style="width:100%;padding:10px;border:1.5px solid #e8e6e0;border-radius:8px;font-size:18px;letter-spacing:6px;text-align:center;margin-bottom:.5rem"
+        onkeydown="if(event.key==='Enter') submitStatsCode()">
+      <div id="stats-code-error" style="color:#993C1D;font-size:12px;min-height:16px;margin-bottom:.75rem"></div>
+      <button onclick="submitStatsCode()" style="width:100%;padding:10px;background:#185FA5;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer">Accéder</button>
+    </div>`;
+  document.body.appendChild(overlay);
+  setTimeout(() => document.getElementById('stats-code-input').focus(), 100);
+  window._statsCallback = callback;
+}
+
+function submitStatsCode() {
+  const val = document.getElementById('stats-code-input').value.trim();
+  if (val === STATS_CODE) {
+    statsCodeOk = true;
+    sessionStorage.setItem('stats_code', STATS_CODE);
+    document.getElementById('stats-code-overlay').remove();
+    if (window._statsCallback) { window._statsCallback(); window._statsCallback = null; }
+  } else {
+    document.getElementById('stats-code-error').textContent = '❌ Code incorrect';
+    document.getElementById('stats-code-input').value = '';
+    document.getElementById('stats-code-input').focus();
+  }
+}
+
 const EQ_CODE = '009944';
 let eqCodeOk = false;
 
@@ -994,6 +1043,11 @@ function saveEqModal() {
   showToast('✅ Question corrigée et synchronisée !');
 }
 
+function switchUser() {
+  localStorage.removeItem('current_stats_profile');
+  showProfileSelect();
+}
+
 function closeEqModal() {
   document.getElementById('eq-overlay').classList.remove('open');
   eqCodeOk = false;
@@ -1026,7 +1080,7 @@ function renderResults() {
       <p class="results-msg">${msg}</p>
       <div class="btn-row" style="justify-content:center;flex-wrap:wrap">
         <button class="btn primary" onclick="startQuiz()">↺ Recommencer</button>
-        <button class="btn" onclick="showPage('stats')">📊 Voir mes stats</button>
+        <button class="btn" onclick="showPage('stats')">📊 Mes stats</button>
       </div>
     </div>`;
   document.getElementById('prog').style.width='100%';
@@ -1469,23 +1523,11 @@ function switchStatsProfile(p) {
 }
 
 function renderProfileButtons() {
-  // Boutons stats
   const statsDiv = document.getElementById('stats-profile-btns');
   if (statsDiv) {
     statsDiv.innerHTML = PROFILE_KEYS.map(k =>
       `<button class="btn ${k===currentStatsProfile?'primary':''}" data-profile="${k}"
         onclick="switchStatsProfile('${k}')" style="font-size:13px;font-weight:600">
-        ${PROFILES[k].emoji} ${PROFILES[k].name}
-      </button>`
-    ).join('');
-  }
-  // Boutons quiz profil actif
-  const quizDiv = document.getElementById('quiz-profile-btns');
-  const activeP = localStorage.getItem('current_stats_profile') || PROFILE_KEYS[0];
-  if (quizDiv) {
-    quizDiv.innerHTML = PROFILE_KEYS.map(k =>
-      `<button class="filter-chip ${k===activeP?'active':''}" data-profile="${k}"
-        onclick="setActiveProfile('${k}')">
         ${PROFILES[k].emoji} ${PROFILES[k].name}
       </button>`
     ).join('');
@@ -1588,16 +1630,49 @@ function resetProfileStats() {
 function setActiveProfile(p) {
   localStorage.setItem('current_stats_profile', p);
   currentStatsProfile = p;
-  document.querySelectorAll('#quiz-profile-btns .filter-chip').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.profile === p);
-  });
+  updateNavProfile();
   showToast(PROFILES[p].emoji + ' Profil ' + PROFILES[p].name + ' actif');
 }
 
 function initProfileButtons() {
-  const saved = localStorage.getItem('current_stats_profile') || PROFILE_KEYS[0];
-  currentStatsProfile = saved;
+  const saved = localStorage.getItem('current_stats_profile');
+  if (!saved) {
+    // Aucun profil choisi → afficher l'écran de sélection
+    showProfileSelect();
+  } else {
+    currentStatsProfile = saved;
+    renderProfileButtons();
+    updateNavProfile();
+  }
+}
+
+function showProfileSelect() {
+  const overlay = document.getElementById('profile-select-overlay');
+  const btnsDiv = document.getElementById('profile-select-btns');
+  btnsDiv.innerHTML = PROFILE_KEYS.map(k => `
+    <button onclick="chooseProfile('${k}')" style="width:100%;padding:14px;border-radius:10px;border:2px solid #e8e6e0;background:#fff;cursor:pointer;font-size:16px;font-weight:600;color:#1a1a18;display:flex;align-items:center;gap:12px;transition:all .15s"
+      onmouseover="this.style.borderColor='#185FA5';this.style.background='#E6F1FB'"
+      onmouseout="this.style.borderColor='#e8e6e0';this.style.background='#fff'">
+      <span style="font-size:28px">${PROFILES[k].emoji}</span>
+      <span>${PROFILES[k].name}</span>
+    </button>`).join('');
+  overlay.style.display = 'flex';
+}
+
+function chooseProfile(p) {
+  localStorage.setItem('current_stats_profile', p);
+  currentStatsProfile = p;
+  document.getElementById('profile-select-overlay').style.display = 'none';
   renderProfileButtons();
+  updateNavProfile();
+}
+
+function updateNavProfile() {
+  // Afficher le profil actif dans le titre du quiz
+  const title = document.getElementById('quiz-title');
+  if (title && currentStatsProfile && PROFILES[currentStatsProfile]) {
+    title.textContent = PROFILES[currentStatsProfile].emoji + ' ' + PROFILES[currentStatsProfile].name;
+  }
 }
 
 // ========================
