@@ -5,26 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quiz Assurances — AFA FR ACP</title>
 <style>
+
   :root {
     --blue: #185FA5; --blue-light: #E6F1FB; --blue-dark: #0C447C;
     --green: #0F6E56; --green-light: #E1F5EE; --green-mid: #1D9E75;
     --red: #993C1D; --red-light: #FAECE7;
     --orange: #BA7517; --orange-light: #FAEEDA;
-    --yellow: #F5C518;
     --gray: #f5f4f1; --gray2: #e8e6e0; --gray3: #888780;
     --text: #1a1a18; --text2: #5a5956; --text3: #888780;
     --radius: 10px; --radius-sm: 6px;
     --shadow: 0 2px 12px rgba(0,0,0,0.08);
-    --bg: #f0ede8; --card: #fff;
-  }
-  body.dark {
-    --bg: #1a1a18; --card: #242422;
-    --gray: #2a2a28; --gray2: #3a3a38; --gray3: #555552;
-    --text: #f0ede8; --text2: #b5b2ad; --text3: #888780;
-    --blue-light: #1a2e45; --green-light: #0d2a22; --red-light: #2a1510; --orange-light: #2a1e08;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background .2s, color .2s; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0ede8; color: var(--text); min-height: 100vh; }
 
   /* NAV */
   nav { background: #fff; border-bottom: 1px solid var(--gray2); padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; height: 54px; position: sticky; top: 0; z-index: 100; }
@@ -181,51 +174,75 @@
   .info-box { padding: 10px 14px; background: var(--blue-light); border-radius: var(--radius-sm); font-size: 12px; color: var(--blue-dark); margin-top: .75rem; }
   .warn-box { padding: 10px 14px; background: var(--orange-light); border-radius: var(--radius-sm); font-size: 12px; color: var(--orange); margin-top: .75rem; }
 
-  /* DARK MODE CARDS */
-  .admin-card, .share-box, .modal, .question-card, .q-item, .module-item, .stat { background: var(--card); }
-  .option { background: var(--card); }
+
+  /* DARK MODE */
+  body.dark {
+    --bg: #1a1a18; --card: #242422;
+    --gray: #2a2a28; --gray2: #3a3a38; --gray3: #555552;
+    --text: #f0ede8; --text2: #b5b2ad; --text3: #888780;
+    --blue-light: #1a2e45; --green-light: #0d2a22;
+    --red-light: #2a1510; --orange-light: #2a1e08;
+  }
+  body.dark .admin-card, body.dark .share-box, body.dark .modal,
+  body.dark .question-card, body.dark .q-item, body.dark .module-item,
+  body.dark .stat, body.dark .option, body.dark input[type=text],
+  body.dark textarea, body.dark select { background: var(--card); color: var(--text); }
 
   /* PROFILS */
   .profiles-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; }
   .profiles-overlay.open { display:flex; }
-  .profiles-box { background:var(--card); border-radius:16px; padding:1.75rem; width:340px; max-width:95vw; box-shadow:0 8px 40px rgba(0,0,0,.25); }
-  .profile-btn { width:100%; padding:13px; border-radius:10px; border:2px solid var(--gray2); background:var(--card); cursor:pointer; font-size:14px; font-weight:600; color:var(--text); margin-bottom:8px; transition:all .15s; display:flex; align-items:center; gap:10px; }
+  .profiles-box { background:#fff; border-radius:16px; padding:1.75rem; width:340px; max-width:95vw; box-shadow:0 8px 40px rgba(0,0,0,.25); }
+  body.dark .profiles-box { background:#242422; }
+  .profile-btn { width:100%; padding:13px; border-radius:10px; border:2px solid var(--gray2); background:var(--card); cursor:pointer; font-size:14px; font-weight:600; color:var(--text); margin-bottom:8px; transition:all .15s; display:flex; align-items:center; gap:10px; text-align:left; }
   .profile-btn:hover { border-color:var(--blue); background:var(--blue-light); color:var(--blue); }
   .profile-btn.active-profile { border-color:var(--green); background:var(--green-light); color:var(--green); }
 
+  /* MODE QUIZ */
+  .mode-bar { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:.9rem; }
+
+  /* STREAK BANNER */
+  .streak-banner { display:none; background:linear-gradient(135deg,var(--orange-light),#fff8e1); border:1.5px solid var(--orange); border-radius:var(--radius-sm); padding:8px 14px; font-size:13px; font-weight:600; color:var(--orange); margin-bottom:.75rem; text-align:center; }
+
   /* MASTERY DOTS */
-  .mastery-dot { width:8px; height:8px; border-radius:50%; background:var(--gray2); display:inline-block; }
+  .mastery-dot { width:7px; height:7px; border-radius:50%; display:inline-block; margin:0 1px; background:var(--gray2); }
   .mastery-dot.done { background:var(--green-mid); }
 
   /* FAV BTN */
-  .fav-btn { background:none; border:none; cursor:pointer; font-size:18px; padding:0 2px; line-height:1; opacity:.5; transition:opacity .15s, transform .15s; margin-left:auto; }
+  .fav-btn { background:none; border:none; cursor:pointer; font-size:18px; padding:0 2px; line-height:1; opacity:.5; transition:opacity .15s, transform .15s; margin-left:auto; flex-shrink:0; }
   .fav-btn:hover, .fav-btn.active { opacity:1; transform:scale(1.2); }
 
+  /* STAT SÉRIE */
+  .stat-row { grid-template-columns: repeat(4,1fr); }
+
   /* FLASHCARD */
-  .flashcard { background:var(--card); border:2px solid var(--blue); border-radius:14px; padding:2rem 1.5rem; text-align:center; cursor:pointer; min-height:180px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; box-shadow:var(--shadow); transition:transform .1s; }
-  .flashcard:active { transform:scale(.98); }
-  .flashcard-answer { background:var(--green-light); border:2px solid var(--green); border-radius:10px; padding:1rem; font-size:14px; color:var(--green); font-weight:600; margin-top:.75rem; width:100%; text-align:left; }
+  .flashcard-wrap { background:var(--card); border:2px solid var(--blue); border-radius:var(--radius); padding:2rem 1.5rem; text-align:center; cursor:pointer; min-height:160px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; box-shadow:var(--shadow); transition:transform .1s; }
+  .flashcard-wrap:active { transform:scale(.98); }
+  .flashcard-answer { background:var(--green-light); border:2px solid var(--green); border-radius:10px; padding:1rem; font-size:14px; color:var(--green); font-weight:600; margin-top:.75rem; width:100%; text-align:left; display:none; }
 
-  /* EXAM TIMER */
-  .exam-timer { font-size:44px; font-weight:700; color:var(--blue); text-align:center; margin:.75rem 0; font-variant-numeric:tabular-nums; }
+  /* EXAMEN BLANC */
+  .exam-timer { font-size:48px; font-weight:700; color:var(--blue); text-align:center; margin:.75rem 0; font-variant-numeric:tabular-nums; }
   .exam-timer.warning { color:var(--orange); }
-  .exam-timer.danger { color:var(--red); animation:pulse 1s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.4} }
+  .exam-timer.danger { color:var(--red); animation:blink 1s infinite; }
+  @keyframes blink { 0%,100%{opacity:1}50%{opacity:.4} }
 
-  /* STATS BAR */
+  /* STATS */
   .rub-stat-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
-  .rub-stat-label { font-size:12px; color:var(--text2); width:150px; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .rub-stat-label { font-size:12px; color:var(--text2); width:160px; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .rub-stat-bar { flex:1; height:8px; background:var(--gray2); border-radius:4px; overflow:hidden; }
   .rub-stat-fill { height:100%; border-radius:4px; transition:width .4s; }
-  .rub-stat-pct { font-size:12px; color:var(--text3); width:34px; text-align:right; flex-shrink:0; }
-
-  /* HISTORY */
+  .rub-stat-pct { font-size:12px; color:var(--text3); width:34px; text-align:right; }
   .history-item { background:var(--card); border:1px solid var(--gray2); border-radius:var(--radius-sm); padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px; }
 
-  @media(max-width:600px){ .stat-row { grid-template-columns:repeat(2,1fr); } .rub-stat-label { width:90px; } }
+  /* DARK BTN */
+  .dark-toggle { background:none; border:1.5px solid var(--gray2); border-radius:50%; width:30px; height:30px; cursor:pointer; font-size:15px; display:flex; align-items:center; justify-content:center; color:var(--text2); flex-shrink:0; }
+  .user-badge { display:flex; align-items:center; gap:5px; padding:4px 10px; background:var(--blue-light); border-radius:20px; font-size:12px; font-weight:600; color:var(--blue); cursor:pointer; border:1.5px solid var(--blue); white-space:nowrap; flex-shrink:0; }
+
+  @media(max-width:600px){ .stat-row { grid-template-columns:repeat(2,1fr); } .rub-stat-label { width:90px; } .nav-tabs { gap:2px; } .nav-tab { padding:5px 8px; font-size:11px; } }
+
 </style>
 </head>
 <body>
+
 
 <nav>
   <div class="nav-logo">📚 Quiz AFA</div>
@@ -237,10 +254,10 @@
     <button class="nav-tab" onclick="showPage('admin')">✏️ Gérer</button>
     <button class="nav-tab" onclick="showPage('share')">🔗 Partager</button>
   </div>
-  <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+  <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;margin-left:4px">
     <span id="sync-status" style="font-size:11px;font-weight:500;transition:color .3s"></span>
-    <div id="user-badge" onclick="openProfiles()" style="display:flex;align-items:center;gap:5px;padding:4px 10px;background:var(--blue-light);border-radius:20px;font-size:12px;font-weight:600;color:var(--blue);cursor:pointer;border:1.5px solid var(--blue);white-space:nowrap">👤 —</div>
-    <button onclick="toggleDark()" id="dark-btn" style="background:none;border:1.5px solid var(--gray2);border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center">🌙</button>
+    <div class="user-badge" id="user-badge" onclick="openProfiles()">👤 —</div>
+    <button class="dark-toggle" id="dark-btn" onclick="toggleDark()">🌙</button>
   </div>
 </nav>
 
@@ -249,24 +266,25 @@
   <div class="quiz-header">
     <h1 id="quiz-title">Quiz — Assurances</h1>
     <span id="q-counter" style="font-size:13px;color:var(--text3)"></span>
+  <span id="sync-status" style="font-size:12px;font-weight:500;transition:color .3s"></span>
   </div>
 
+  <!-- MODULE SELECTOR -->
   <div class="module-bar" id="module-bar-quiz"></div>
 
+  <!-- RUBRIQUE FILTER -->
+  <div class="filter-chips" id="rubrique-filter"></div>
+
+  <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
   <!-- MODE QUIZ -->
-  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.9rem">
+  <div class="mode-bar">
     <button class="filter-chip active" id="mode-normal-btn" onclick="setQuizMode('normal')">🎯 Normal</button>
     <button class="filter-chip" id="mode-errors-btn" onclick="setQuizMode('errors')">❌ Mes erreurs</button>
     <button class="filter-chip" id="mode-favs-btn" onclick="setQuizMode('favs')">⭐ Favoris</button>
     <button class="filter-chip" id="mode-mastery-btn" onclick="setQuizMode('mastery')">🏅 Non maîtrisées</button>
   </div>
-
-  <div class="filter-chips" id="rubrique-filter"></div>
-
   <!-- STREAK BANNER -->
-  <div id="streak-banner" style="display:none;background:linear-gradient(135deg,var(--orange-light),#fff3cd);border:1.5px solid var(--orange);border-radius:var(--radius-sm);padding:8px 14px;font-size:13px;font-weight:600;color:var(--orange);margin-bottom:.75rem;text-align:center"></div>
-
-  <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+  <div id="streak-banner" class="streak-banner"></div>
   <div class="stat-row">
     <div class="stat"><div class="stat-label">Répondues</div><div class="stat-val" id="s-total" style="color:var(--blue)">0</div></div>
     <div class="stat"><div class="stat-label">Correctes</div><div class="stat-val" id="s-ok" style="color:var(--green)">0</div></div>
@@ -290,17 +308,36 @@
 <div class="page" id="page-exam">
   <div style="margin-bottom:1rem"><h1 style="font-size:18px;font-weight:600">📝 Examen blanc</h1></div>
   <div id="exam-area">
-    <div style="background:var(--card);border:1px solid var(--gray2);border-radius:var(--radius);padding:1.5rem;text-align:center">
+    <div class="admin-card" style="text-align:center;padding:2rem">
       <div style="font-size:36px;margin-bottom:.5rem">🎓</div>
       <h2 style="font-size:18px;font-weight:700;margin-bottom:.5rem">Examen blanc</h2>
       <p style="font-size:13px;color:var(--text2);margin-bottom:1.5rem">Simule les conditions d'examen avec un chrono et un score final.</p>
       <div style="display:flex;flex-direction:column;gap:10px;max-width:260px;margin:0 auto 1.5rem">
-        <div><label style="font-size:12px;color:var(--text2);font-weight:500;display:block;margin-bottom:3px">Nombre de questions</label>
-          <select id="exam-count" style="width:100%"><option value="10">10 questions</option><option value="20" selected>20 questions</option><option value="30">30 questions</option><option value="50">50 questions</option></select></div>
-        <div><label style="font-size:12px;color:var(--text2);font-weight:500;display:block;margin-bottom:3px">Durée</label>
-          <select id="exam-time" style="width:100%"><option value="0">Sans chrono</option><option value="600">10 min</option><option value="1200" selected>20 min</option><option value="1800">30 min</option><option value="3600">1 heure</option></select></div>
-        <div><label style="font-size:12px;color:var(--text2);font-weight:500;display:block;margin-bottom:3px">Module</label>
-          <select id="exam-module" style="width:100%"><option value="all">Tous les modules</option></select></div>
+        <div>
+          <label style="font-size:12px;color:var(--text2);font-weight:500;display:block;margin-bottom:3px">Nombre de questions</label>
+          <select id="exam-count" style="width:100%">
+            <option value="10">10 questions</option>
+            <option value="20" selected>20 questions</option>
+            <option value="30">30 questions</option>
+            <option value="50">50 questions</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--text2);font-weight:500;display:block;margin-bottom:3px">Durée</label>
+          <select id="exam-time" style="width:100%">
+            <option value="0">Sans chrono</option>
+            <option value="600">10 min</option>
+            <option value="1200" selected>20 min</option>
+            <option value="1800">30 min</option>
+            <option value="3600">1 heure</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:12px;color:var(--text2);font-weight:500;display:block;margin-bottom:3px">Module</label>
+          <select id="exam-module" style="width:100%">
+            <option value="all">Tous les modules</option>
+          </select>
+        </div>
       </div>
       <button class="btn primary" style="padding:11px 28px;font-size:14px" onclick="startExam()">🚀 Lancer l'examen</button>
     </div>
@@ -502,14 +539,14 @@
 <!-- MODALE PROFILS -->
 <div class="profiles-overlay" id="profiles-overlay">
   <div class="profiles-box">
-    <h2 style="font-size:18px;font-weight:700;margin-bottom:1.25rem;text-align:center">👤 Choisir un profil</h2>
+    <h2 style="font-size:18px;font-weight:700;margin-bottom:1.25rem;text-align:center;color:var(--text)">👤 Choisir un profil</h2>
     <button class="profile-btn" id="profile-btn-risto" onclick="selectProfile('risto')">
       <div style="width:36px;height:36px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🧑</div>
-      <div style="text-align:left"><div>Risto</div><div id="profile-stats-risto" style="font-size:11px;color:var(--text3);font-weight:400"></div></div>
+      <div><div>Risto</div><div id="profile-stats-risto" style="font-size:11px;color:var(--text3);font-weight:400;margin-top:2px"></div></div>
     </button>
     <button class="profile-btn" id="profile-btn-dani" onclick="selectProfile('dani')">
       <div style="width:36px;height:36px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🧑</div>
-      <div style="text-align:left"><div>Dani</div><div id="profile-stats-dani" style="font-size:11px;color:var(--text3);font-weight:400"></div></div>
+      <div><div>Dani</div><div id="profile-stats-dani" style="font-size:11px;color:var(--text3);font-weight:400;margin-top:2px"></div></div>
     </button>
     <button class="btn" style="width:100%;margin-top:6px" onclick="closeProfiles()">Annuler</button>
   </div>
@@ -517,7 +554,9 @@
 
 <div class="toast" id="toast"></div>
 
+
 <script>
+
 // ========================
 // DATA STRUCTURE
 // ========================
@@ -582,62 +621,11 @@ let DB = {
 };
 
 // ========================
-// PROFILS
-// ========================
-const PROFILES = { risto:{name:'Risto',emoji:'🧑'}, dani:{name:'Dani',emoji:'🧑'} };
-let currentProfile = 'risto';
-
-function getProfileData(p) {
-  try { const d=localStorage.getItem('profile_'+p); return d?JSON.parse(d):{history:[],errors:{},favs:[],mastery:{},streak:0}; }
-  catch(e){return{history:[],errors:{},favs:[],mastery:{},streak:0};}
-}
-function saveProfileData(p,data){try{localStorage.setItem('profile_'+p,JSON.stringify(data));}catch(e){}}
-function getPD(){return getProfileData(currentProfile);}
-function savePD(data){saveProfileData(currentProfile,data);}
-
-function selectProfile(p){
-  currentProfile=p; localStorage.setItem('current_profile',p);
-  document.getElementById('user-badge').textContent=PROFILES[p].emoji+' '+PROFILES[p].name;
-  document.getElementById('profile-btn-risto').classList.toggle('active-profile',p==='risto');
-  document.getElementById('profile-btn-dani').classList.toggle('active-profile',p==='dani');
-  closeProfiles(); initQuiz(); showToast('Profil '+PROFILES[p].name+' chargé !');
-}
-function openProfiles(){
-  ['risto','dani'].forEach(p=>{
-    const pd=getProfileData(p); const total=pd.history.reduce((a,h)=>a+h.total,0); const correct=pd.history.reduce((a,h)=>a+h.correct,0);
-    const pct=total>0?Math.round(correct/total*100):0;
-    document.getElementById('profile-stats-'+p).textContent=total>0?pd.history.length+' sessions · '+pct+'% de réussite':'Aucune session';
-  });
-  document.getElementById('profiles-overlay').classList.add('open');
-}
-function closeProfiles(){document.getElementById('profiles-overlay').classList.remove('open');}
-
-// ========================
-// DARK MODE
-// ========================
-function toggleDark(){
-  document.body.classList.toggle('dark');
-  const isDark=document.body.classList.contains('dark');
-  localStorage.setItem('dark_mode',isDark?'1':'0');
-  document.getElementById('dark-btn').textContent=isDark?'☀️':'🌙';
-}
-
-// ========================
-// QUIZ MODE
-// ========================
-let quizMode='normal';
-function setQuizMode(mode){
-  quizMode=mode;
-  ['normal','errors','favs','mastery'].forEach(m=>{
-    document.getElementById('mode-'+m+'-btn').classList.toggle('active',m===mode);
-  });
-  startQuiz();
-}
-
-// ========================
 // INIT & STORAGE
 // ========================
 const QUESTIONS_URL = 'https://raw.githubusercontent.com/ristotrad/Quiz-assurance/main/questions.json';
+
+// Auth admin
 const ADMIN_USER = 'admin';
 const ADMIN_PASS = btoa('Moulaff.1.2.3');
 let isAdminLogged = false;
@@ -719,12 +707,15 @@ function loadLocalOrHash() {
 
 async function initApp() {
   document.body.insertAdjacentHTML('afterbegin',
-    '<div id="init-loader" style="position:fixed;inset:0;background:var(--bg,#f0ede8);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:12px">' +
+    '<div id="init-loader" style="position:fixed;inset:0;background:#f0ede8;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:12px">' +
     '<div style="font-size:32px">📚</div>' +
-    '<div style="font-size:15px;color:var(--text2,#5a5956);font-weight:500">Chargement des questions…</div>' +
+    '<div style="font-size:15px;color:#5a5956;font-weight:500">Chargement des questions…</div>' +
     '</div>');
   // Dark mode
-  if(localStorage.getItem('dark_mode')==='1'){document.body.classList.add('dark');document.getElementById('dark-btn').textContent='☀️';}
+  if(localStorage.getItem('dark_mode')==='1'){
+    document.body.classList.add('dark');
+    document.getElementById('dark-btn').textContent='☀️';
+  }
   // Profil
   const savedProfile=localStorage.getItem('current_profile')||'risto';
   currentProfile=savedProfile;
@@ -737,8 +728,6 @@ async function initApp() {
   if(loader) loader.remove();
   populateExamModules();
   initQuiz();
-  initFlash();
-  renderStatsPage();
 }
 
 // Migration : ancien format sans modules → nouveau format
@@ -836,7 +825,7 @@ function showPage(name) {
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   if(event && event.target) event.target.classList.add('active');
   if(name==='admin'){ requireAdmin(()=>{ document.getElementById('page-admin').classList.add('active'); renderAdminPage(); }); return; }
-  const pageEl = document.getElementById('page-'+name);
+  const pageEl=document.getElementById('page-'+name);
   if(pageEl) pageEl.classList.add('active');
   if(name==='stats') renderStatsPage();
   if(name==='flashcard') initFlash();
@@ -921,16 +910,16 @@ function toggleRubrique(btn, rub) {
 function shuffle(arr) { return arr.slice().sort(()=>Math.random()-.5); }
 
 function startQuiz() {
-  quizState.current = 0; quizState.correct = 0; quizState.wrong = 0;
-  const pd = getPD();
-  let pool = DB.questions;
-  if(activeModuleId !== 'all') pool = pool.filter(q => q.module === activeModuleId);
-  if(quizState.activeRubriques.length > 0) pool = pool.filter(q => quizState.activeRubriques.includes(q.theme));
+  quizState.current=0; quizState.correct=0; quizState.wrong=0;
+  const pd=getPD();
+  let pool=DB.questions;
+  if(activeModuleId!=='all') pool=pool.filter(q=>q.module===activeModuleId);
+  if(quizState.activeRubriques.length>0) pool=pool.filter(q=>quizState.activeRubriques.includes(q.theme));
 
   if(quizMode==='errors'){
     const errIds=Object.keys(pd.errors||{}).filter(id=>(pd.errors[id]||0)>0);
     pool=pool.filter(q=>errIds.includes(String(q.id)));
-    if(!pool.length){document.getElementById('quiz-area').innerHTML='<div style="text-align:center;padding:2rem;color:var(--text3)">🎉 Aucune erreur enregistrée !<br><br>Fais d'abord un quiz en mode Normal.</div>';updateStats();return;}
+    if(!pool.length){document.getElementById('quiz-area').innerHTML='<div style="text-align:center;padding:2rem;color:var(--text3)">🎉 Aucune erreur enregistrée !<br><br>Fais d\'abord un quiz en mode Normal.</div>';updateStats();return;}
   } else if(quizMode==='favs'){
     pool=pool.filter(q=>(pd.favs||[]).includes(q.id));
     if(!pool.length){document.getElementById('quiz-area').innerHTML='<div style="text-align:center;padding:2rem;color:var(--text3)">⭐ Aucun favori !<br><br>Clique sur ☆ pendant le quiz pour en ajouter.</div>';updateStats();return;}
@@ -939,7 +928,7 @@ function startQuiz() {
     if(!pool.length){document.getElementById('quiz-area').innerHTML='<div style="text-align:center;padding:2rem;color:var(--text3)">🏅 Toutes maîtrisées ! Tu es prêt 🎉</div>';updateStats();return;}
   }
 
-  quizState.questions = shuffle(pool);
+  quizState.questions=shuffle(pool);
   updateStats(); renderQuestion();
 }
 
@@ -948,8 +937,7 @@ function updateStats() {
   document.getElementById('s-total').textContent = q.current;
   document.getElementById('s-ok').textContent = q.correct;
   document.getElementById('s-no').textContent = q.wrong;
-  const sStreak = document.getElementById('s-streak');
-  if(sStreak) sStreak.textContent = getPD().streak||0;
+  const sStreak=document.getElementById('s-streak'); if(sStreak) sStreak.textContent=getPD().streak||0;
   const pct = q.questions.length > 0 ? (q.current / q.questions.length * 100) : 0;
   document.getElementById('prog').style.width = Math.round(pct)+'%';
   document.getElementById('q-counter').textContent = q.current < q.questions.length ? `${q.current+1} / ${q.questions.length}` : '';
@@ -967,17 +955,17 @@ function renderQuestion() {
   const isMulti = q.type === 'multi';
   const shape = isMulti ? 'square' : 'round';
   const modName = DB.modules.find(m=>m.id===q.module);
-  const pd = getPD();
-  const isFav = (pd.favs||[]).includes(q.id);
-  const masteryCount = (pd.mastery||{})[q.id]||0;
-  const masteryDots = [0,1,2].map(i=>`<span class="mastery-dot ${i<masteryCount?'done':''}" style="width:7px;height:7px;border-radius:50%;background:${i<masteryCount?'var(--green-mid)':'var(--gray2)'};display:inline-block;margin-right:2px"></span>`).join('');
+  const pd=getPD();
+  const isFav=(pd.favs||[]).includes(q.id);
+  const mc=(pd.mastery||{})[q.id]||0;
+  const dots=[0,1,2].map(i=>`<span class="mastery-dot ${i<mc?'done':''}"></span>`).join('');
   document.getElementById('quiz-area').innerHTML = `
     <div class="question-card">
       <div class="q-meta">
         ${modName ? `<span class="tag-mod">${modName.name.replace(/Module \d — /,'')}</span>` : ''}
         <span class="tag">${q.theme}</span>
         <span class="type-badge">${isMulti ? '☐ Plusieurs' : '◯ Unique'}</span>
-        <span style="display:inline-flex;gap:2px;align-items:center;margin-left:4px">${masteryDots}</span>
+        <span style="display:inline-flex;gap:2px;align-items:center;margin-left:4px">${dots}</span>
         <button class="fav-btn ${isFav?'active':''}" onclick="toggleFav(${q.id})">${isFav?'⭐':'☆'}</button>
       </div>
       <div class="question-text">${q.text}</div>
@@ -994,9 +982,9 @@ function renderQuestion() {
         <button class="btn" onclick="nextQuestion()" id="btn-next" style="display:none">Question suivante →</button>
         <button class="btn" onclick="startQuiz()" style="font-size:12px;color:var(--text3)">↺ Recommencer</button>
       </div>
-      <button class="btn-edit-q" onclick="openEqModal()" title="Modifier">✏️</button>
+      <button class="btn-edit-q" onclick="openEqModalFor('quiz')" title="Modifier">✏️</button>
     </div>`;
-  window._qOpts = opts; window._qData = q;
+  window._qOpts=opts; window._qData=q;
 }
 
 function selectOpt(idx, isCorrect) {
@@ -1028,14 +1016,11 @@ function selectOpt(idx, isCorrect) {
 }
 
 function submitSingle() {
-  quizState.answered = true;
-  const opts = window._qOpts;
-  const isCorrect = quizState.selected.length>0 && opts[quizState.selected[0]].c;
-  showFeedback(opts, isCorrect);
-  document.getElementById('btn-next').style.display='inline-block';
-  if(isCorrect) quizState.correct++; else quizState.wrong++;
-  recordAnswer(window._qData.id, isCorrect);
-  updateStats();
+  quizState.answered=true; const opts=window._qOpts;
+  const isCorrect=quizState.selected.length>0&&opts[quizState.selected[0]].c;
+  showFeedback(opts,isCorrect); document.getElementById('btn-next').style.display='inline-block';
+  if(isCorrect)quizState.correct++;else quizState.wrong++;
+  recordAnswer(window._qData.id,isCorrect); updateStats();
 }
 
 function submitMulti() {
@@ -1049,45 +1034,8 @@ function submitMulti() {
   showFeedback(opts, isCorrect);
   document.getElementById('btn-submit').style.display='none';
   document.getElementById('btn-next').style.display='inline-block';
-  if(isCorrect) quizState.correct++; else quizState.wrong++;
-  recordAnswer(window._qData.id, isCorrect);
-  updateStats();
-}
-
-function toggleFav(id){
-  const pd=getPD(); if(!pd.favs)pd.favs=[];
-  const idx=pd.favs.indexOf(id);
-  if(idx>-1){pd.favs.splice(idx,1);showToast('Retiré des favoris');}
-  else{pd.favs.push(id);showToast('⭐ Ajouté aux favoris !');}
-  savePD(pd);
-  const btn=document.querySelector('.fav-btn');
-  if(btn){btn.classList.toggle('active',idx===-1);btn.textContent=idx===-1?'⭐':'☆';}
-}
-
-function recordAnswer(id,isCorrect){
-  const pd=getPD();
-  if(!pd.errors)pd.errors={};
-  if(!pd.mastery)pd.mastery={};
-  const sid=String(id);
-  if(isCorrect){
-    pd.streak=(pd.streak||0)+1;
-    pd.mastery[id]=Math.min(3,(pd.mastery[id]||0)+1);
-    if(pd.errors[sid])pd.errors[sid]=Math.max(0,pd.errors[sid]-1);
-  } else {
-    pd.streak=0;
-    pd.mastery[id]=Math.max(0,(pd.mastery[id]||0)-1);
-    pd.errors[sid]=(pd.errors[sid]||0)+1;
-  }
-  savePD(pd);
-  // Streak banner
-  const banner=document.getElementById('streak-banner');
-  if(banner){
-    if(pd.streak>0&&pd.streak%5===0){
-      banner.textContent='🔥 Série de '+pd.streak+' bonnes réponses !';
-      banner.style.display='block';
-      setTimeout(()=>{banner.style.display='none';},3000);
-    }
-  }
+  if(isCorrect)quizState.correct++;else quizState.wrong++;
+  recordAnswer(window._qData.id,isCorrect); updateStats();
 }
 
 function showFeedback(opts, isCorrect) {
@@ -1113,229 +1061,25 @@ function showFeedback(opts, isCorrect) {
 function nextQuestion() { quizState.current++; updateStats(); renderQuestion(); }
 
 // ========================
-// FLASHCARD
-// ========================
-let flashState = { questions:[], current:0, revealed:false };
-let activeFlashModule = 'all';
-
-function initFlash() { renderModuleBarFlash(); startFlash(); }
-function renderModuleBarFlash() {
-  const bar=document.getElementById('module-bar-flash'); if(!bar)return;
-  bar.innerHTML=`<button class="mod-tab all ${activeFlashModule==='all'?'active':''}" onclick="selectFlashModule('all')">🎯 Tous</button>`+
-    DB.modules.map(m=>`<button class="mod-tab ${activeFlashModule===m.id?'active':''}" onclick="selectFlashModule(${m.id})">${m.name.replace(/Module \d — /,'')}</button>`).join('');
-}
-function selectFlashModule(id){activeFlashModule=id==='all'?'all':parseInt(id);renderModuleBarFlash();startFlash();}
-function startFlash(){
-  const pool=activeFlashModule==='all'?DB.questions:DB.questions.filter(q=>q.module===activeFlashModule);
-  flashState.questions=shuffle(pool); flashState.current=0; renderFlash();
-}
-function renderFlash(){
-  flashState.revealed=false;
-  const area=document.getElementById('flash-area'); if(!area)return;
-  if(!flashState.questions.length){area.innerHTML='<div style="text-align:center;padding:2rem;color:var(--text3)">Aucune question.</div>';return;}
-  const q=flashState.questions[flashState.current];
-  const counter=document.getElementById('flash-counter');
-  if(counter) counter.textContent=`${flashState.current+1} / ${flashState.questions.length}`;
-  const correctOpts=q.options.filter(o=>o.c).map(o=>o.t).join('<br>');
-  const masteryCount=(getPD().mastery||{})[q.id]||0;
-  const dots=[0,1,2].map(i=>`<span style="width:7px;height:7px;border-radius:50%;background:${i<masteryCount?'var(--green-mid)':'var(--gray2)'};display:inline-block;margin:0 2px"></span>`).join('');
-  window._flashQ = q;
-  area.innerHTML=`
-    <div class="question-card" style="cursor:default">
-      <div class="q-meta">
-        <span class="tag">${q.theme}</span>
-        <span class="type-badge">${q.type==='multi'?'☐ Plusieurs':'◯ Unique'}</span>
-        <span style="display:inline-flex;gap:2px;align-items:center;margin-left:4px">${dots}</span>
-      </div>
-      <div class="flashcard" onclick="revealFlash()" id="flash-card" style="margin:0;border-radius:var(--radius-sm);border:2px solid var(--blue)">
-        <div style="font-size:11px;color:var(--text3)">👆 Touche pour révéler</div>
-        <div style="font-size:15px;font-weight:600;line-height:1.6;text-align:center">${q.text}</div>
-      </div>
-      <div id="flash-answer" style="display:none;background:var(--green-light);border:2px solid var(--green);border-radius:10px;padding:1rem;font-size:14px;color:var(--green);font-weight:600;margin-top:.75rem">✅ ${correctOpts}</div>
-      <div class="btn-row" style="margin-top:1rem">
-        <button class="btn" onclick="flashPrev()">← Préc.</button>
-        <button class="btn primary" onclick="flashNext()">Suiv. →</button>
-        <button class="btn success" onclick="startFlash()">🔀 Mélanger</button>
-      </div>
-      <button class="btn-edit-q" onclick="openEqModalFor('flash')" title="Modifier cette flashcard">✏️</button>
-    </div>`;
-}
-function revealFlash(){
-  if(flashState.revealed)return; flashState.revealed=true;
-  document.getElementById('flash-answer').style.display='block';
-  const card=document.getElementById('flash-card'); if(card) card.style.borderColor='var(--green)';
-}
-function flashNext(){flashState.current=(flashState.current+1)%flashState.questions.length;renderFlash();}
-function flashPrev(){flashState.current=(flashState.current-1+flashState.questions.length)%flashState.questions.length;renderFlash();}
-
-// ========================
-// EXAMEN BLANC
-// ========================
-let examState={questions:[],current:0,correct:0,wrong:0,answered:false,selected:[],timer:null,timeLeft:0};
-
-function populateExamModules(){
-  const sel=document.getElementById('exam-module'); if(!sel)return;
-  sel.innerHTML='<option value="all">Tous les modules</option>'+DB.modules.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');
-}
-function startExam(){
-  const count=parseInt(document.getElementById('exam-count').value);
-  const time=parseInt(document.getElementById('exam-time').value);
-  const modId=document.getElementById('exam-module').value;
-  let pool=modId==='all'?DB.questions:DB.questions.filter(q=>q.module===parseInt(modId));
-  pool=shuffle(pool).slice(0,count);
-  clearInterval(examState.timer);
-  examState={questions:pool,current:0,correct:0,wrong:0,answered:false,selected:[],timer:null,timeLeft:time};
-  if(time>0){examState.timer=setInterval(()=>{examState.timeLeft--;updateExamTimer();if(examState.timeLeft<=0){clearInterval(examState.timer);renderExamResults();}},1000);}
-  renderExamQuestion();
-}
-function updateExamTimer(){
-  const el=document.getElementById('exam-timer-display'); if(!el||!examState.timeLeft)return;
-  const m=Math.floor(examState.timeLeft/60); const s=examState.timeLeft%60;
-  el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  el.className='exam-timer'+(examState.timeLeft<60?' danger':examState.timeLeft<180?' warning':'');
-}
-function renderExamQuestion(){
-  if(examState.current>=examState.questions.length){renderExamResults();return;}
-  examState.answered=false; examState.selected=[];
-  const q=examState.questions[examState.current]; const opts=shuffle(q.options); const isMulti=q.type==='multi';
-  const pct=Math.round(examState.current/examState.questions.length*100);
-  const timerHtml=examState.timeLeft>0?`<div class="exam-timer" id="exam-timer-display">${String(Math.floor(examState.timeLeft/60)).padStart(2,'0')}:${String(examState.timeLeft%60).padStart(2,'0')}</div>`:'';
-  document.getElementById('exam-area').innerHTML=`${timerHtml}
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:.75rem">
-      <div style="flex:1;height:5px;background:var(--gray2);border-radius:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:var(--blue);border-radius:3px"></div></div>
-      <span style="font-size:12px;color:var(--text3)">${examState.current+1}/${examState.questions.length}</span>
-    </div>
-    <div class="question-card">
-      <div class="question-text">${q.text}</div>
-      <div class="options" id="exam-opts">
-        ${opts.map((o,i)=>`<div class="option" id="eopt-${i}" onclick="examSelectOpt(${i},${o.c})">
-          <div class="opt-indicator ${isMulti?'square':'round'}" id="eind-${i}">${String.fromCharCode(97+i)}</div>
-          <span class="opt-text">${o.t}</span></div>`).join('')}
-      </div>
-      <div id="exam-feedback"></div>
-      <div class="btn-row">
-        <button class="btn primary" onclick="examSubmitMulti()" id="ebtn-submit" style="${isMulti?'':'display:none'}">Valider</button>
-        <button class="btn" onclick="examNext()" id="ebtn-next" style="display:none">Suivante →</button>
-        <button class="btn danger" onclick="stopExam()" style="font-size:12px">⏹ Arrêter</button>
-      </div>
-      <button class="btn-edit-q" onclick="openEqModalFor('exam')" title="Modifier cette question">✏️</button>
-    </div>`;
-  window._examOpts=opts; window._examQ=q;
-}
-function examSelectOpt(idx,isCorrect){
-  if(examState.answered)return; const q=window._examQ;
-  if(q.type==='single'){
-    document.querySelectorAll('#exam-opts .option').forEach((el,i)=>{el.classList.remove('selected');const ind=document.getElementById('eind-'+i);ind.classList.remove('sel-ind');ind.textContent=String.fromCharCode(97+i);});
-    examState.selected=[idx]; document.getElementById('eopt-'+idx).classList.add('selected');
-    const ind=document.getElementById('eind-'+idx);ind.classList.add('sel-ind');ind.textContent='✓'; examSubmitSingle();
-  } else {
-    const si=examState.selected.indexOf(idx); const el=document.getElementById('eopt-'+idx); const ind=document.getElementById('eind-'+idx);
-    if(si>-1){examState.selected.splice(si,1);el.classList.remove('selected');ind.classList.remove('sel-ind');ind.textContent=String.fromCharCode(97+idx);}
-    else{examState.selected.push(idx);el.classList.add('selected');ind.classList.add('sel-ind');ind.textContent='✓';}
-  }
-}
-function examSubmitSingle(){
-  examState.answered=true; const opts=window._examOpts; const isCorrect=examState.selected.length>0&&opts[examState.selected[0]].c;
-  examShowFeedback(opts,isCorrect); document.getElementById('ebtn-next').style.display='inline-block';
-  if(isCorrect)examState.correct++;else examState.wrong++;
-}
-function examSubmitMulti(){
-  if(examState.answered)return; examState.answered=true; const opts=window._examOpts;
-  const correctIdxs=opts.reduce((a,o,i)=>{if(o.c)a.push(i);return a;},[]);
-  const isCorrect=examState.selected.filter(i=>!opts[i].c).length===0&&correctIdxs.filter(i=>!examState.selected.includes(i)).length===0;
-  examShowFeedback(opts,isCorrect); document.getElementById('ebtn-submit').style.display='none'; document.getElementById('ebtn-next').style.display='inline-block';
-  if(isCorrect)examState.correct++;else examState.wrong++;
-}
-function examShowFeedback(opts,isCorrect){
-  opts.forEach((o,i)=>{const el=document.getElementById('eopt-'+i);const ind=document.getElementById('eind-'+i);el.classList.add('disabled');el.style.cursor='default';
-    if(o.c){el.classList.remove('selected','wrong');el.classList.add('correct');ind.classList.remove('sel-ind','cross-ind');ind.classList.add('tick-ind');ind.textContent='✓';}
-    else if(examState.selected.includes(i)){el.classList.remove('selected');el.classList.add('wrong');ind.classList.remove('sel-ind','tick-ind');ind.classList.add('cross-ind');ind.textContent='✗';}
-  });
-  document.getElementById('exam-feedback').innerHTML=`<div class="feedback-box ${isCorrect?'ok':'ko'}"><strong>${isCorrect?'✓ Correct':'✗ Incorrect'}</strong><br>${window._examQ.explanation||''}</div>`;
-}
-function examNext(){examState.current++;renderExamQuestion();}
-function stopExam(){clearInterval(examState.timer);renderExamResults();}
-function renderExamResults(){
-  clearInterval(examState.timer);
-  const total=examState.questions.length; const pct=total>0?Math.round(examState.correct/total*100):0;
-  const pass=pct>=70;
-  const pd=getPD(); pd.history=pd.history||[];
-  pd.history.unshift({date:new Date().toLocaleDateString('fr-CH'),correct:examState.correct,total,pct,module:'Examen blanc 📝',isExam:true});
-  if(pd.history.length>50)pd.history=pd.history.slice(0,50); savePD(pd);
-  document.getElementById('exam-area').innerHTML=`<div style="text-align:center;padding:1.5rem 0">
-    <div style="font-size:40px;margin-bottom:.5rem">${pass?'🏆':'📖'}</div>
-    <div style="font-size:60px;font-weight:700;color:${pass?'var(--green)':'var(--red)'}">${pct}%</div>
-    <div style="font-size:14px;color:var(--text2);margin:.5rem 0 1rem">${examState.correct} / ${total} correctes</div>
-    <div style="font-size:15px;margin-bottom:1.5rem">${pass?'✅ Réussi ! Bravo !':'❌ Échec. Continue à t'entraîner !'}</div>
-    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-      <button class="btn primary" onclick="document.getElementById('exam-area').innerHTML='';populateExamModules();location.reload()">↺ Nouvel examen</button>
-      <button class="btn" onclick="showPage('stats')">📊 Stats</button>
-    </div></div>`;
-}
-
-// ========================
-// STATS PAGE
-// ========================
-function renderStatsPage(){
-  const area=document.getElementById('stats-area'); if(!area)return;
-  const pd=getPD();
-  const history=pd.history||[];
-  const totalQ=history.reduce((a,h)=>a+h.total,0);
-  const totalC=history.reduce((a,h)=>a+h.correct,0);
-  const globalPct=totalQ>0?Math.round(totalC/totalQ*100):0;
-  const favCount=(pd.favs||[]).length;
-  const masteredCount=Object.values(pd.mastery||{}).filter(v=>v>=3).length;
-  const streak=pd.streak||0;
-
-  // Stats par rubrique (basé sur mastery)
-  const rubStats={};
-  DB.questions.forEach(q=>{if(!rubStats[q.theme])rubStats[q.theme]={total:0,mastered:0};rubStats[q.theme].total++;if(((pd.mastery||{})[q.id]||0)>=1)rubStats[q.theme].mastered++;});
-  const rubHtml=Object.entries(rubStats).filter(([,v])=>v.total>0)
-    .sort((a,b)=>(b[1].mastered/b[1].total)-(a[1].mastered/a[1].total))
-    .map(([rub,v])=>{const p=Math.round(v.mastered/v.total*100);const color=p>=80?'var(--green)':p>=50?'var(--orange)':'var(--red)';
-      return `<div class="rub-stat-row"><div class="rub-stat-label" title="${rub}">${rub}</div><div class="rub-stat-bar"><div class="rub-stat-fill" style="width:${p}%;background:${color}"></div></div><div class="rub-stat-pct">${p}%</div></div>`;}).join('') || '<div style="font-size:13px;color:var(--text3)">Fais des quiz pour voir tes stats !</div>';
-
-  const histHtml=history.slice(0,10).map(h=>`<div class="history-item">
-    <div><div style="font-size:20px;font-weight:700;color:${h.pct>=70?'var(--green)':'var(--red)'}">${h.pct}%</div>
-    <div style="font-size:12px;color:var(--text3)">${h.correct}/${h.total} · ${h.module||'Quiz'}</div></div>
-    <div style="font-size:12px;color:var(--text3)">${h.date}</div></div>`).join('') || '<div style="text-align:center;padding:1rem;color:var(--text3);font-size:13px">Aucune session pour l'instant.</div>';
-
-  area.innerHTML=`
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.25rem">
-      <div class="stat"><div class="stat-label">Réussite</div><div class="stat-val" style="color:var(--blue)">${globalPct}%</div></div>
-      <div class="stat"><div class="stat-label">Série 🔥</div><div class="stat-val" style="color:var(--orange)">${streak}</div></div>
-      <div class="stat"><div class="stat-label">⭐ Favoris</div><div class="stat-val" style="color:#F5C518">${favCount}</div></div>
-      <div class="stat"><div class="stat-label">🏅 Maîtrisées</div><div class="stat-val" style="color:var(--green)">${masteredCount}</div></div>
-    </div>
-    <div class="admin-card" style="margin-bottom:1rem"><h3 style="font-size:14px;font-weight:600;margin-bottom:1rem;color:var(--blue)">📊 Maîtrise par rubrique</h3>${rubHtml}</div>
-    <div class="admin-card" style="margin-bottom:1rem"><h3 style="font-size:14px;font-weight:600;margin-bottom:1rem;color:var(--blue)">🕐 Historique</h3>${histHtml}</div>
-    <div style="text-align:center;margin-top:1rem"><button class="btn danger" onclick="if(confirm('Réinitialiser tes stats ?')){savePD({history:[],errors:{},favs:[],mastery:{},streak:0});renderStatsPage();showToast('Stats réinitialisées');}">🗑 Réinitialiser mes stats</button></div>`;
-}
-
-// ========================
 // EDIT QUESTION (QUIZ)
 // ========================
 const EQ_CODE = '009944';
 let eqCodeOk = false;
 
-let _eqContext = 'quiz'; // 'quiz', 'flash', 'exam'
-
-function openEqModal() { openEqModalFor('quiz'); }
-
-function openEqModalFor(context) {
-  _eqContext = context;
-  eqCodeOk = false;
-  document.getElementById('eq-auth-section').style.display = 'block';
-  document.getElementById('eq-form-section').style.display = 'none';
-  document.getElementById('eq-code-input').value = '';
-  document.getElementById('eq-code-error').textContent = '';
+let _eqContext='quiz';
+function openEqModal(){ openEqModalFor('quiz'); }
+function openEqModalFor(ctx){
+  _eqContext=ctx; eqCodeOk=false;
+  document.getElementById('eq-auth-section').style.display='block';
+  document.getElementById('eq-form-section').style.display='none';
+  document.getElementById('eq-code-input').value='';
+  document.getElementById('eq-code-error').textContent='';
   document.getElementById('eq-overlay').classList.add('open');
-  setTimeout(() => document.getElementById('eq-code-input').focus(), 100);
+  setTimeout(()=>document.getElementById('eq-code-input').focus(),100);
 }
-
-function getEqQuestion() {
-  if (_eqContext === 'flash') return window._flashQ;
-  if (_eqContext === 'exam') return window._examQ;
+function getEqQ(){
+  if(_eqContext==='flash') return window._flashQ;
+  if(_eqContext==='exam') return window._examQ;
   return window._qData;
 }
 
@@ -1354,7 +1098,7 @@ function checkEqCode() {
 }
 
 function fillEqForm() {
-  const q = getEqQuestion();
+  const q = getEqQ();
   if (!q) return;
   document.getElementById('eq-text').value = q.text;
   document.getElementById('eq-type').value = q.type;
@@ -1378,7 +1122,7 @@ function addEqOpt(text='', correct=false) {
 }
 
 function saveEqModal() {
-  const q = getEqQuestion();
+  const q = getEqQ();
   if (!q) return;
   const newText = document.getElementById('eq-text').value.trim();
   const newType = document.getElementById('eq-type').value;
@@ -1401,22 +1145,12 @@ function saveEqModal() {
   if (dbQ) { dbQ.text = newText; dbQ.type = newType; dbQ.options = newOpts; dbQ.explanation = newExpl; }
 
   // Mettre à jour le state selon le contexte
-  if (_eqContext === 'flash') {
-    const fi = flashState.questions.findIndex(sq => sq.id === q.id);
-    if (fi > -1) flashState.questions[fi] = { ...flashState.questions[fi], text: newText, type: newType, options: newOpts, explanation: newExpl };
-  } else if (_eqContext === 'exam') {
-    const ei = examState.questions.findIndex(sq => sq.id === q.id);
-    if (ei > -1) examState.questions[ei] = { ...examState.questions[ei], text: newText, type: newType, options: newOpts, explanation: newExpl };
-  } else {
-    const sqIdx = quizState.questions.findIndex(sq => sq.id === q.id);
-    if (sqIdx > -1) quizState.questions[sqIdx] = { ...quizState.questions[sqIdx], text: newText, type: newType, options: newOpts, explanation: newExpl };
-  }
-
-  saveDB();
-  closeEqModal();
-  // Re-render selon le contexte
-  if (_eqContext === 'flash') renderFlash();
-  else if (_eqContext === 'exam') renderExamQuestion();
+  if(_eqContext==='flash'){const fi=flashState.questions.findIndex(sq=>sq.id===q.id);if(fi>-1)flashState.questions[fi]={...flashState.questions[fi],text:newText,type:newType,options:newOpts,explanation:newExpl};}
+  else if(_eqContext==='exam'){const ei=examState.questions.findIndex(sq=>sq.id===q.id);if(ei>-1)examState.questions[ei]={...examState.questions[ei],text:newText,type:newType,options:newOpts,explanation:newExpl};}
+  else{const si=quizState.questions.findIndex(sq=>sq.id===q.id);if(si>-1)quizState.questions[si]={...quizState.questions[si],text:newText,type:newType,options:newOpts,explanation:newExpl};}
+  saveDB(); closeEqModal();
+  if(_eqContext==='flash') renderFlash();
+  else if(_eqContext==='exam') renderExamQuestion();
   else renderQuestion();
   showToast('✅ Question corrigée et synchronisée !');
 }
@@ -1429,15 +1163,7 @@ function closeEqModal() {
 function renderResults() {
   const q = quizState;
   const pct = q.questions.length>0 ? Math.round(q.correct/q.questions.length*100) : 0;
-  const msg = pct>=90?"🏆 Excellent ! Tu maîtrises parfaitement.":pct>=75?"🎉 Super. Tu es sur la bonne voie !":pct>=60?"📖 Pas mal, quelques révisions s'imposent.":"💪 Continue à t'entraîner !";
-  // Historique
-  const pd=getPD(); pd.history=pd.history||[];
-  const modName=activeModuleId==='all'?'Tous':DB.modules.find(m=>m.id===activeModuleId)?.name||'';
-  pd.history.unshift({date:new Date().toLocaleDateString('fr-CH'),correct:q.correct,total:q.questions.length,pct,module:modName});
-  if(pd.history.length>50)pd.history=pd.history.slice(0,50);
-  savePD(pd);
-  // Inutilisé ci-dessous (déjà remplacé inline)
-  const _unused_msg = msg;
+  const msg = pct>=90?"🏆 Excellent ! Tu maîtrises parfaitement le cours." : pct>=75?"🎉 Super. Tu es sur la bonne voie !" : pct>=60?"📖 Pas mal, mais quelques révisions s'imposent." : "💪 Continue à t'entraîner, tu vas y arriver !";
   document.getElementById('quiz-area').innerHTML = `
     <div class="results">
       <div class="score-big">${pct}%</div>
@@ -1856,6 +1582,346 @@ function showToast(msg) {
 // INIT
 // ========================
 initApp();
+
+
+// ========================
+// PROFILS
+// ========================
+const PROFILES = { risto:{name:'Risto',emoji:'🧑'}, dani:{name:'Dani',emoji:'🧑'} };
+let currentProfile = 'risto';
+
+function getProfileData(p) {
+  try { const d=localStorage.getItem('profile_'+p); return d?JSON.parse(d):{history:[],errors:{},favs:[],mastery:{},streak:0}; }
+  catch(e){return{history:[],errors:{},favs:[],mastery:{},streak:0};}
+}
+function saveProfileData(p,data){ try{localStorage.setItem('profile_'+p,JSON.stringify(data));}catch(e){} }
+function getPD(){ return getProfileData(currentProfile); }
+function savePD(data){ saveProfileData(currentProfile,data); }
+
+function selectProfile(p){
+  currentProfile=p; localStorage.setItem('current_profile',p);
+  document.getElementById('user-badge').textContent=PROFILES[p].emoji+' '+PROFILES[p].name;
+  document.getElementById('profile-btn-risto').classList.toggle('active-profile',p==='risto');
+  document.getElementById('profile-btn-dani').classList.toggle('active-profile',p==='dani');
+  closeProfiles(); initQuiz(); showToast('Profil '+PROFILES[p].name+' chargé !');
+}
+function openProfiles(){
+  ['risto','dani'].forEach(p=>{
+    const pd=getProfileData(p);
+    const total=pd.history.reduce((a,h)=>a+h.total,0);
+    const correct=pd.history.reduce((a,h)=>a+h.correct,0);
+    const pct=total>0?Math.round(correct/total*100):0;
+    document.getElementById('profile-stats-'+p).textContent=total>0?pd.history.length+' sessions · '+pct+'% de réussite':'Aucune session';
+  });
+  document.getElementById('profiles-overlay').classList.add('open');
+}
+function closeProfiles(){ document.getElementById('profiles-overlay').classList.remove('open'); }
+
+// ========================
+// DARK MODE
+// ========================
+function toggleDark(){
+  document.body.classList.toggle('dark');
+  const isDark=document.body.classList.contains('dark');
+  localStorage.setItem('dark_mode',isDark?'1':'0');
+  document.getElementById('dark-btn').textContent=isDark?'☀️':'🌙';
+}
+
+// ========================
+// QUIZ MODE
+// ========================
+let quizMode='normal';
+function setQuizMode(mode){
+  quizMode=mode;
+  ['normal','errors','favs','mastery'].forEach(m=>{
+    const btn=document.getElementById('mode-'+m+'-btn');
+    if(btn) btn.classList.toggle('active',m===mode);
+  });
+  startQuiz();
+}
+
+// ========================
+// FAVORIS + MASTERY + STREAK
+// ========================
+function toggleFav(id){
+  const pd=getPD(); if(!pd.favs)pd.favs=[];
+  const idx=pd.favs.indexOf(id);
+  if(idx>-1){pd.favs.splice(idx,1);showToast('Retiré des favoris');}
+  else{pd.favs.push(id);showToast('⭐ Ajouté aux favoris !');}
+  savePD(pd);
+  const btn=document.querySelector('.fav-btn');
+  if(btn){btn.classList.toggle('active',idx===-1);btn.textContent=idx===-1?'⭐':'☆';}
+}
+
+function recordAnswer(id,isCorrect){
+  const pd=getPD();
+  if(!pd.errors)pd.errors={};
+  if(!pd.mastery)pd.mastery={};
+  const sid=String(id);
+  if(isCorrect){
+    pd.streak=(pd.streak||0)+1;
+    pd.mastery[id]=Math.min(3,(pd.mastery[id]||0)+1);
+    if(pd.errors[sid])pd.errors[sid]=Math.max(0,pd.errors[sid]-1);
+  } else {
+    pd.streak=0;
+    pd.mastery[id]=Math.max(0,(pd.mastery[id]||0)-1);
+    pd.errors[sid]=(pd.errors[sid]||0)+1;
+  }
+  savePD(pd);
+  // Streak banner
+  const banner=document.getElementById('streak-banner');
+  if(banner&&pd.streak>0&&pd.streak%5===0){
+    banner.textContent='🔥 Série de '+pd.streak+' bonnes réponses consécutives !';
+    banner.style.display='block';
+    setTimeout(()=>{banner.style.display='none';},3000);
+  }
+  const sStreak=document.getElementById('s-streak');
+  if(sStreak) sStreak.textContent=pd.streak||0;
+}
+
+// ========================
+// FLASHCARD
+// ========================
+let flashState={questions:[],current:0};
+let activeFlashModule='all';
+
+function initFlash(){
+  renderModuleBarFlash(); startFlash();
+}
+function renderModuleBarFlash(){
+  const bar=document.getElementById('module-bar-flash'); if(!bar)return;
+  bar.innerHTML=`<button class="mod-tab all ${activeFlashModule==='all'?'active':''}" onclick="selectFlashModule('all')">🎯 Tous</button>`+
+    DB.modules.map(m=>`<button class="mod-tab ${activeFlashModule===m.id?'active':''}" onclick="selectFlashModule(${m.id})">${m.name.replace(/Module \d — /,'')}</button>`).join('');
+}
+function selectFlashModule(id){ activeFlashModule=id==='all'?'all':parseInt(id); renderModuleBarFlash(); startFlash(); }
+function startFlash(){
+  const pool=activeFlashModule==='all'?DB.questions:DB.questions.filter(q=>q.module===activeFlashModule);
+  flashState.questions=shuffle(pool); flashState.current=0; renderFlash();
+}
+function renderFlash(){
+  const area=document.getElementById('flash-area'); if(!area)return;
+  if(!flashState.questions.length){area.innerHTML='<div style="text-align:center;padding:2rem;color:var(--text3)">Aucune question disponible.</div>';return;}
+  const q=flashState.questions[flashState.current];
+  window._flashQ=q;
+  const counter=document.getElementById('flash-counter');
+  if(counter) counter.textContent=`${flashState.current+1} / ${flashState.questions.length}`;
+  const pd=getPD();
+  const masteryCount=(pd.mastery||{})[q.id]||0;
+  const dots=[0,1,2].map(i=>`<span class="mastery-dot ${i<masteryCount?'done':''}"></span>`).join('');
+  const correctOpts=q.options.filter(o=>o.c).map(o=>'• '+o.t).join('<br>');
+  area.innerHTML=`
+    <div class="question-card" style="position:relative">
+      <div class="q-meta">
+        <span class="tag">${q.theme}</span>
+        <span style="display:inline-flex;gap:2px;align-items:center;margin-left:4px">${dots}</span>
+      </div>
+      <div class="flashcard-wrap" onclick="revealFlash()" id="flash-card">
+        <div style="font-size:11px;color:var(--text3)">👆 Touche pour révéler la réponse</div>
+        <div style="font-size:15px;font-weight:600;line-height:1.6;text-align:center">${q.text}</div>
+      </div>
+      <div class="flashcard-answer" id="flash-answer">✅ ${correctOpts}</div>
+      <div class="btn-row" style="margin-top:1rem">
+        <button class="btn" onclick="flashPrev()">← Préc.</button>
+        <button class="btn primary" onclick="flashNext()">Suiv. →</button>
+        <button class="btn success" onclick="startFlash()">🔀 Mélanger</button>
+      </div>
+      <button class="btn-edit-q" onclick="openEqModalFor('flash')" title="Modifier">✏️</button>
+    </div>`;
+}
+function revealFlash(){
+  const ans=document.getElementById('flash-answer'); const card=document.getElementById('flash-card');
+  if(ans) ans.style.display='block';
+  if(card) card.style.borderColor='var(--green)';
+}
+function flashNext(){ flashState.current=(flashState.current+1)%flashState.questions.length; renderFlash(); }
+function flashPrev(){ flashState.current=(flashState.current-1+flashState.questions.length)%flashState.questions.length; renderFlash(); }
+
+// ========================
+// EXAMEN BLANC
+// ========================
+let examState={questions:[],current:0,correct:0,wrong:0,answered:false,selected:[],timer:null,timeLeft:0};
+
+function populateExamModules(){
+  const sel=document.getElementById('exam-module'); if(!sel)return;
+  sel.innerHTML='<option value="all">Tous les modules</option>'+DB.modules.map(m=>`<option value="${m.id}">${m.name}</option>`).join('');
+}
+function startExam(){
+  const count=parseInt(document.getElementById('exam-count').value);
+  const time=parseInt(document.getElementById('exam-time').value);
+  const modId=document.getElementById('exam-module').value;
+  let pool=modId==='all'?DB.questions:DB.questions.filter(q=>q.module===parseInt(modId));
+  pool=shuffle(pool).slice(0,count);
+  clearInterval(examState.timer);
+  examState={questions:pool,current:0,correct:0,wrong:0,answered:false,selected:[],timer:null,timeLeft:time};
+  if(time>0){
+    examState.timer=setInterval(()=>{
+      examState.timeLeft--;
+      updateExamTimer();
+      if(examState.timeLeft<=0){clearInterval(examState.timer);renderExamResults();}
+    },1000);
+  }
+  renderExamQuestion();
+}
+function updateExamTimer(){
+  const el=document.getElementById('exam-timer-display'); if(!el)return;
+  const m=Math.floor(examState.timeLeft/60); const s=examState.timeLeft%60;
+  el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  el.className='exam-timer'+(examState.timeLeft<60?' danger':examState.timeLeft<180?' warning':'');
+}
+function renderExamQuestion(){
+  if(examState.current>=examState.questions.length){renderExamResults();return;}
+  examState.answered=false; examState.selected=[];
+  const q=examState.questions[examState.current];
+  window._examQ=q;
+  const opts=shuffle(q.options); window._examOpts=opts;
+  const isMulti=q.type==='multi';
+  const pct=Math.round(examState.current/examState.questions.length*100);
+  const timerHtml=examState.timeLeft>0?`<div class="exam-timer" id="exam-timer-display">${String(Math.floor(examState.timeLeft/60)).padStart(2,'0')}:${String(examState.timeLeft%60).padStart(2,'0')}</div>`:'';
+  document.getElementById('exam-area').innerHTML=`
+    ${timerHtml}
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:.75rem">
+      <div style="flex:1;height:5px;background:var(--gray2);border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:var(--blue);border-radius:3px"></div>
+      </div>
+      <span style="font-size:12px;color:var(--text3)">${examState.current+1}/${examState.questions.length}</span>
+    </div>
+    <div class="question-card" style="position:relative">
+      <div class="question-text">${q.text}</div>
+      <div class="options" id="exam-opts">
+        ${opts.map((o,i)=>`
+          <div class="option" id="eopt-${i}" onclick="examSelectOpt(${i})">
+            <div class="opt-indicator ${isMulti?'square':'round'}" id="eind-${i}">${String.fromCharCode(97+i)}</div>
+            <span class="opt-text">${o.t}</span>
+          </div>`).join('')}
+      </div>
+      <div id="exam-feedback"></div>
+      <div class="btn-row">
+        <button class="btn primary" onclick="examSubmitMulti()" id="ebtn-submit" style="${isMulti?'':'display:none'}">Valider</button>
+        <button class="btn" onclick="examNext()" id="ebtn-next" style="display:none">Suivante →</button>
+        <button class="btn danger" onclick="stopExam()" style="font-size:12px">⏹ Arrêter</button>
+      </div>
+      <button class="btn-edit-q" onclick="openEqModalFor('exam')" title="Modifier">✏️</button>
+    </div>`;
+}
+function examSelectOpt(idx){
+  if(examState.answered)return;
+  const q=window._examQ;
+  if(q.type==='single'){
+    document.querySelectorAll('#exam-opts .option').forEach((el,i)=>{
+      el.classList.remove('selected');
+      const ind=document.getElementById('eind-'+i);
+      ind.classList.remove('sel-ind'); ind.textContent=String.fromCharCode(97+i);
+    });
+    examState.selected=[idx];
+    document.getElementById('eopt-'+idx).classList.add('selected');
+    const ind=document.getElementById('eind-'+idx); ind.classList.add('sel-ind'); ind.textContent='✓';
+    examSubmitSingle();
+  } else {
+    const si=examState.selected.indexOf(idx);
+    const el=document.getElementById('eopt-'+idx); const ind=document.getElementById('eind-'+idx);
+    if(si>-1){examState.selected.splice(si,1);el.classList.remove('selected');ind.classList.remove('sel-ind');ind.textContent=String.fromCharCode(97+idx);}
+    else{examState.selected.push(idx);el.classList.add('selected');ind.classList.add('sel-ind');ind.textContent='✓';}
+  }
+}
+function examSubmitSingle(){
+  examState.answered=true; const opts=window._examOpts;
+  const isCorrect=examState.selected.length>0&&opts[examState.selected[0]].c;
+  examShowFeedback(opts,isCorrect);
+  document.getElementById('ebtn-next').style.display='inline-block';
+  if(isCorrect)examState.correct++;else examState.wrong++;
+}
+function examSubmitMulti(){
+  if(examState.answered)return; examState.answered=true; const opts=window._examOpts;
+  const correctIdxs=opts.reduce((a,o,i)=>{if(o.c)a.push(i);return a;},[]);
+  const isCorrect=examState.selected.filter(i=>!opts[i].c).length===0&&correctIdxs.filter(i=>!examState.selected.includes(i)).length===0;
+  examShowFeedback(opts,isCorrect);
+  document.getElementById('ebtn-submit').style.display='none'; document.getElementById('ebtn-next').style.display='inline-block';
+  if(isCorrect)examState.correct++;else examState.wrong++;
+}
+function examShowFeedback(opts,isCorrect){
+  opts.forEach((o,i)=>{
+    const el=document.getElementById('eopt-'+i); const ind=document.getElementById('eind-'+i);
+    el.classList.add('disabled'); el.style.cursor='default';
+    if(o.c){el.classList.remove('selected','wrong');el.classList.add('correct');ind.classList.remove('sel-ind','cross-ind');ind.classList.add('tick-ind');ind.textContent='✓';}
+    else if(examState.selected.includes(i)){el.classList.remove('selected');el.classList.add('wrong');ind.classList.remove('sel-ind','tick-ind');ind.classList.add('cross-ind');ind.textContent='✗';}
+  });
+  document.getElementById('exam-feedback').innerHTML=`<div class="feedback-box ${isCorrect?'ok':'ko'}"><strong>${isCorrect?'✓ Correct':'✗ Incorrect'}</strong><br>${window._examQ.explanation||''}</div>`;
+}
+function examNext(){ examState.current++; renderExamQuestion(); }
+function stopExam(){ clearInterval(examState.timer); renderExamResults(); }
+function renderExamResults(){
+  clearInterval(examState.timer);
+  const total=examState.questions.length; const pct=total>0?Math.round(examState.correct/total*100):0;
+  const pass=pct>=70;
+  const pd=getPD(); pd.history=pd.history||[];
+  pd.history.unshift({date:new Date().toLocaleDateString('fr-CH'),correct:examState.correct,total,pct,module:'Examen blanc 📝',isExam:true});
+  if(pd.history.length>50)pd.history=pd.history.slice(0,50); savePD(pd);
+  document.getElementById('exam-area').innerHTML=`
+    <div style="text-align:center;padding:1.5rem 0">
+      <div style="font-size:40px;margin-bottom:.5rem">${pass?'🏆':'📖'}</div>
+      <div style="font-size:60px;font-weight:700;color:${pass?'var(--green)':'var(--red)'}">${pct}%</div>
+      <div style="font-size:14px;color:var(--text2);margin:.5rem 0 1rem">${examState.correct} / ${total} correctes</div>
+      <div style="font-size:15px;margin-bottom:1.5rem">${pass?'✅ Réussi ! Bravo !':'❌ Échec. Continue à t\'entraîner !'}</div>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+        <button class="btn primary" onclick="showPage('exam')">↺ Nouvel examen</button>
+        <button class="btn" onclick="showPage('stats')">📊 Mes stats</button>
+      </div>
+    </div>`;
+}
+
+// ========================
+// STATS PAGE
+// ========================
+function renderStatsPage(){
+  const area=document.getElementById('stats-area'); if(!area)return;
+  const pd=getPD();
+  const history=pd.history||[];
+  const totalQ=history.reduce((a,h)=>a+h.total,0);
+  const totalC=history.reduce((a,h)=>a+h.correct,0);
+  const globalPct=totalQ>0?Math.round(totalC/totalQ*100):0;
+  const favCount=(pd.favs||[]).length;
+  const masteredCount=Object.values(pd.mastery||{}).filter(v=>v>=3).length;
+  const streak=pd.streak||0;
+
+  const rubStats={};
+  DB.questions.forEach(q=>{if(!rubStats[q.theme])rubStats[q.theme]={total:0,mastered:0};rubStats[q.theme].total++;if(((pd.mastery||{})[q.id]||0)>=1)rubStats[q.theme].mastered++;});
+  const rubHtml=Object.entries(rubStats).filter(([,v])=>v.total>0)
+    .sort((a,b)=>(b[1].mastered/b[1].total)-(a[1].mastered/a[1].total))
+    .map(([rub,v])=>{
+      const p=Math.round(v.mastered/v.total*100);
+      const color=p>=80?'var(--green)':p>=50?'var(--orange)':'var(--red)';
+      return `<div class="rub-stat-row"><div class="rub-stat-label" title="${rub}">${rub}</div><div class="rub-stat-bar"><div class="rub-stat-fill" style="width:${p}%;background:${color}"></div></div><div class="rub-stat-pct">${p}%</div></div>`;
+    }).join('')||'<div style="font-size:13px;color:var(--text3)">Fais des quiz pour voir tes stats !</div>';
+
+  const histHtml=history.slice(0,10).map(h=>`
+    <div class="history-item">
+      <div>
+        <div style="font-size:20px;font-weight:700;color:${h.pct>=70?'var(--green)':'var(--red)'}">${h.pct}%</div>
+        <div style="font-size:12px;color:var(--text3)">${h.correct}/${h.total} · ${h.module||'Quiz'}</div>
+      </div>
+      <div style="font-size:12px;color:var(--text3)">${h.date}</div>
+    </div>`).join('')||'<div style="text-align:center;padding:1rem;color:var(--text3);font-size:13px">Aucune session pour l\'instant.</div>';
+
+  area.innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.25rem">
+      <div class="stat"><div class="stat-label">Réussite</div><div class="stat-val" style="color:var(--blue)">${globalPct}%</div></div>
+      <div class="stat"><div class="stat-label">Série 🔥</div><div class="stat-val" style="color:var(--orange)">${streak}</div></div>
+      <div class="stat"><div class="stat-label">⭐ Favoris</div><div class="stat-val" style="color:#F5C518">${favCount}</div></div>
+      <div class="stat"><div class="stat-label">🏅 Maîtrisées</div><div class="stat-val" style="color:var(--green)">${masteredCount}</div></div>
+    </div>
+    <div class="admin-card" style="margin-bottom:1rem">
+      <h3 style="font-size:14px;font-weight:600;margin-bottom:1rem;color:var(--blue)">📊 Maîtrise par rubrique</h3>
+      ${rubHtml}
+    </div>
+    <div class="admin-card" style="margin-bottom:1rem">
+      <h3 style="font-size:14px;font-weight:600;margin-bottom:1rem;color:var(--blue)">🕐 Historique des sessions</h3>
+      ${histHtml}
+    </div>
+    <div style="text-align:center;margin-top:1rem">
+      <button class="btn danger" onclick="if(confirm('Réinitialiser tes stats ?')){savePD({history:[],errors:{},favs:[],mastery:{},streak:0});renderStatsPage();showToast('Stats réinitialisées');}">🗑 Réinitialiser mes stats</button>
+    </div>`;
+}
+
 </script>
 </body>
 </html>
